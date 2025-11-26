@@ -1,0 +1,28 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto",sans-serif;
+}
+
+:root {
+  --color-primary: #2D5BE3;
+  --color-primary-light: #3E6CF0;
+  --color-secondary: #00BFA6;
+  --color-secondary-light: #33D4B2;
+  --color-bg: #F8FAFD;
+  --color-white: #FFFFFF;
+  --color-text: #1E1E1E;
+  --color-muted: #6B7280;
+  --shadow-light: #0000000d;
+  --shadow-medium: #0000001a;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+body {
+  background-color: var(--color-bg);
+}
