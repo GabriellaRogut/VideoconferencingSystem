@@ -185,13 +185,3 @@ input:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(45, 91, 227, 0.2);
 }
-
-/* FOOTER */
-footer {
-    background: var(--color-white);
-    text-align: center;
-    padding: 2rem;
-    font-size: 0.9rem;
-    color: var(--color-muted);
-    margin-top: 3rem;
-}

@@ -204,7 +204,7 @@
 }
 
 
-/* --- GRID LOGIC --- */
+/* --- GRID LOGIC ??? --- */
 
 /* 1 participant → full width */
 .video-grid {
@@ -234,7 +234,7 @@
 
 
 
-/* CONTROLS (FOOTER)*/
+/* CONTROLS */
 .controls {
   margin-top: auto;
   display: flex;

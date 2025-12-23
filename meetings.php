@@ -1,5 +1,5 @@
 <?php
-// Example data – in real app you fetch from database
+// Example data (will fetch from database)
 $meetings = [
     [
         'title' => 'Среща с Мария',
@@ -13,16 +13,17 @@ $meetings = [
         'date' => '2025-12-21',
         'start_time' => '14:00',
         'duration' => '45 мин',
-        'participants' => ['Иван Петров', 'Даная Иванова', 'Мариан Станев']
+        'participants' => ['Иван Петров', 'Мариан Станев']
     ],
 ];
 ?>
+
 <!DOCTYPE html>
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SignConnect | Срещи</title>
+    <title>SignConnect | Вашите срещи</title>
 
     <?php include("includes/links.php"); ?>
     <link rel="stylesheet" href="assets/css/meetings-style.css?v=2">

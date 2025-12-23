@@ -1,10 +1,3 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", "Roboto", sans-serif;
-}
-
 :root {
     --color-primary: #2D5BE3;
     --color-primary-light: #3E6CF0;
@@ -21,11 +14,23 @@
     --shadow-heavy: 0 10px 35px rgba(0, 0, 0, 0.12);
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", "Roboto", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
     background: var(--color-bg);
     color: var(--color-text);
 }
 
+/* HEADER */
 .main-header {
     display: flex;
     justify-content: space-between;

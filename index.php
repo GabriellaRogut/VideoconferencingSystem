@@ -22,8 +22,8 @@
             <a href="#join">Присъединете се</a>
 
             <!-- if logged in ?? -->
-            <!-- <a href="meetings.php">Срещи</a>
-            <a href="account.php">Акаунт</a>  -->
+            <a href="meetings.php">Срещи</a>
+            <a href="account.php">Акаунт</a> 
         </nav>
     </header>
 
@@ -122,14 +122,6 @@
     </div>
 
     <script>
-        // Smooth scroll
-        document.querySelectorAll('nav a').forEach(anchor=>{
-            anchor.addEventListener('click',function(e){
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({behavior:'smooth'});
-            });
-        });
-
         // Feature fade-in on scroll
         const cards = document.querySelectorAll('.feature-card');
         const observer = new IntersectionObserver(entries=>{

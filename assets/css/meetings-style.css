@@ -9,9 +9,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(104, 104, 104, 0.842);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    padding: 10px 12px;
+    background: rgba(104, 104, 104, 0.778);
+    box-shadow: 0 4px 12px var(--shadow-heavy);
+    padding: 10px 20px;
     border-radius: 25px;
 }
 
