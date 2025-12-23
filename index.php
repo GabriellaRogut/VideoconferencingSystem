@@ -61,7 +61,7 @@
 
     <section class="demo" id="demo">
         <video controls autoplay muted loop>
-            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+            <source src="https://filesamples.com/samples/video/mp4/sample_1280x720.mp4" type="video/mp4">
         </video>
     </section>
 
