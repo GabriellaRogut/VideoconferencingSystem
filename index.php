@@ -13,13 +13,17 @@
 
 
 <body>
-    <header>
+    <header class="main-header">
         <div class="logo">SignConnect</div>
         <nav>
             <a href="#features">Характеристики</a>
             <a href="#demo">Демо</a>
             <a href="#testimonials">Отзиви</a>
             <a href="#join">Присъединете се</a>
+
+            <!-- if logged in ?? -->
+            <!-- <a href="meetings.php">Срещи</a>
+            <a href="account.php">Акаунт</a>  -->
         </nav>
     </header>
 

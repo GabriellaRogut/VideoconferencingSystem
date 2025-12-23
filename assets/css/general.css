@@ -1,21 +1,54 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Roboto",sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", "Roboto", sans-serif;
 }
 
 :root {
-  --color-primary: #2D5BE3;
-  --color-primary-light: #3E6CF0;
-  --color-secondary: #00BFA6;
-  --color-secondary-light: #33D4B2;
-  --color-bg: #F8FAFD;
-  --color-white: #FFFFFF;
-  --color-text: #1E1E1E;
-  --color-muted: #6B7280;
-  --shadow-light: #0000000d;
-  --shadow-medium: #0000001a;
+    --color-primary: #2D5BE3;
+    --color-primary-light: #3E6CF0;
+    --color-secondary: #00BFA6;
+    --color-secondary-light: #33D4B2;
+    --color-bg: #F3F5F9;
+    --color-white: #FFFFFF;
+    --color-text: #1E1E1E;
+    --color-muted: #6B7280;
+    --red: #d3403b;
+    --red-hover: #b62525;
+
+    --shadow-light: 0 4px 14px rgba(0, 0, 0, 0.08);
+    --shadow-heavy: 0 10px 35px rgba(0, 0, 0, 0.12);
+}
+
+body {
+    background: var(--color-bg);
+    color: var(--color-text);
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1.2rem 5%;
+    background: var(--color-white);
+    box-shadow: var(--shadow-light);
+  }
+
+.logo {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-family: "Montserrat", sans-serif;
+}
+
+nav a {
+  margin-left: 1.5rem;
+  font-weight: 500;
+  transition: color 0.2s;
 }
 
 a {
@@ -23,6 +56,16 @@ a {
   color: inherit;
 }
 
-body {
-  background-color: var(--color-bg);
+nav a:hover,
+nav a.active {
+    color: var(--color-primary);
+}
+
+/* FOOTER */
+footer {
+  background: var(--color-white); 
+  text-align: center; 
+  padding: 2rem; 
+  font-size: 0.9rem; 
+  color: var(--color-muted);
 }

@@ -1,0 +1,99 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    padding: 30px 40px;
+    gap: 20px;
+}
+
+.page-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(104, 104, 104, 0.842);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 10px 12px;
+    border-radius: 25px;
+}
+
+.page-top h2 {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.meetings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.meeting-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.15s ease;
+}
+
+.meeting-card:hover {
+    transform: scale(1.02);
+}
+
+.meeting-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.meeting-info .title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #4f6fa4;
+}
+
+.meeting-info .datetime {
+    font-size: 14px;
+    color: #6c6c6c;
+}
+
+.participants-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.participants-list .participant {
+    background: #e9f1fde9;
+    color: #4f6fa4;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.participants-list .participant img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.new-meeting-btn {
+    padding: 12px 20px;
+    background: #5094db;
+    color: #fff;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    border: 1px solid #1262b8;
+}
+
+.new-meeting-btn:hover {
+    background: #1262b8;
+}

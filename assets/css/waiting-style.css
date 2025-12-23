@@ -1,0 +1,59 @@
+.waiting-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg,var(--color-primary),var(--color-secondary));
+}
+
+.waiting-card {
+    background: #ffffffdd;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 22px rgba(0,0,0,0.2);
+    text-align: center;
+    max-width: 550px;
+    width: 90%;
+}
+
+.waiting-card h1 {
+    font-size: 28px;
+    color: rgb(49, 76, 146);
+    margin-bottom: 10px;
+}
+
+.waiting-card p {
+    font-size: 16px;
+    color: #6c6c6c;
+    margin-bottom: 20px;
+}
+
+.waiting-card .meeting-code {
+    font-size: 22px;
+    font-weight: 600;
+    color: #2a6ebb;
+    margin-bottom: 30px;
+}
+
+#localVideo {
+    width: 100%;
+    border-radius: 12px;
+    background: black;
+    aspect-ratio: 16/9;
+    margin-bottom: 20px;
+}
+
+.copy-btn {
+    padding: 10px 18px;
+    background: #3b72ad;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.copy-btn:hover {
+    background: #1262b8;
+}

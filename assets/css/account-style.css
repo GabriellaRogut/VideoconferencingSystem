@@ -1,0 +1,197 @@
+/* PAGE LAYOUT */
+.account-container {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 35px;
+    padding: 50px 6%;
+}
+
+@media (max-width: 900px) {
+    .account-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* SHARED CARD STYLE */
+.acc-card {
+    background: var(--color-white);
+    padding: 2.2rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-light);
+    transition: 0.25s;
+}
+
+.acc-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-heavy);
+}
+
+/* PROFILE CARD */
+.profile-card {
+    text-align: center;
+}
+
+.profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: var(--shadow-light);
+    margin-bottom: 1.4rem;
+}
+
+.profile-card h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: .4rem;
+}
+
+.email {
+    color: var(--color-muted);
+    margin-bottom: 1.4rem;
+}
+
+/* STATS */
+.stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.stat-box h3 {
+    color: var(--color-primary);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.stat-box p {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+/* BUTTONS */
+.edit-btn{
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: .9rem 1.4rem;
+    border-radius: 14px;
+    width: 100%;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+    font-size: 1rem;
+}
+
+.save-btn {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: .85rem 1.3rem;
+    border-radius: 12px;
+    width: 30%;
+    cursor: pointer;
+    transition: 0.25s;
+    margin-top: 0px;
+    margin-bottom: 30px;
+}
+
+.save-btn-div {
+    display: flex;
+    padding: 10px;
+    width: 100%;
+    align-items: center;
+    justify-content: end;
+}
+
+.edit-btn:hover,
+.save-btn:hover {
+    background: var(--color-primary-light);
+    transform: translateY(-2px);
+}
+
+
+/* DELETE BUTTON */
+.danger-container {
+    display: flex;
+    justify-content: center;
+}
+
+.danger-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: .85rem 1.3rem;
+    border-radius: 12px;
+    width: 95%;
+    cursor: pointer;
+    margin-top: 40px;
+    transition: 0.25s;
+}
+
+.danger-btn:hover {
+    background: var(--red-hover);
+    transform: translateY(-2px);
+}
+
+/* SETTINGS SECTION */
+.section-title {
+    margin-bottom: 1.8rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.settings-form .field {
+    margin-bottom: 1.4rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-row {
+    display: flex;
+    gap: 25px;
+}
+
+@media (max-width: 700px) {
+    .input-row {
+        flex-direction: column;
+    }
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: .35rem;
+    color: var(--color-muted);
+}
+
+/* TEXT FIELDS */
+.view-fields {
+    padding: 0.8rem 0;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+/* INPUTS */
+input {
+    padding: 0.85rem;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: 0.25s;
+}
+
+input:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(45, 91, 227, 0.2);
+}
+
+/* FOOTER */
+footer {
+    background: var(--color-white);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    margin-top: 3rem;
+}
