@@ -155,8 +155,9 @@ body {
     cursor: pointer;
 }
 
-.save-btn:hover, .cancel-btn:hocer {
+.save-btn:hover, .cancel-btn:hover {
     background: var(--color-secondary-light);
+    transform: scale(1.05);
 }
 
 /* DANGER ZONE */

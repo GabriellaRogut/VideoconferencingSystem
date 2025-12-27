@@ -125,7 +125,7 @@
 
             <div class="btn-div">
                 <button class="save-btn" type="submit">Запази промените</button>
-                <button class="cancel-btn" type="submit">Назад</button>
+                <button class="cancel-btn" type="button">Назад</button>
             </div>
         </form>
 
@@ -144,23 +144,30 @@
 </html>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const editBtn = document.querySelector(".edit-btn");
-    const saveBtn = document.querySelector(".save-btn");
-    const viewDiv = document.getElementById("view-account");
-    const editDiv = document.getElementById("edit-account");
+    document.addEventListener("DOMContentLoaded", () => {
+        const editBtn = document.querySelector(".edit-btn");
+        const saveBtn = document.querySelector(".save-btn");
+        const cancelBtn = document.querySelector(".cancel-btn");
+        const viewDiv = document.getElementById("view-account");
+        const editDiv = document.getElementById("edit-account");
 
-    // Open edit mode
-    editBtn.addEventListener("click", () => {
-        viewDiv.style.display = "none";
-        editDiv.style.display = "block";
-    });
+        // Open edit mode
+        editBtn.addEventListener("click", () => {
+            viewDiv.style.display = "none";
+            editDiv.style.display = "block";
+        });
 
-    // Save and return to view mode
-    saveBtn.addEventListener("click", (e) => {
-        e.preventDefault(); // stop page reload
-        editDiv.style.display = "none";
-        viewDiv.style.display = "block";
+        // Save and return to view mode
+        saveBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            editDiv.style.display = "none";
+            viewDiv.style.display = "block";
+        });
+
+        // Cancel and return to view mode
+        cancelBtn.addEventListener("click", () => {
+            editDiv.style.display = "none";
+            viewDiv.style.display = "block";
+        });
     });
-});
 </script>

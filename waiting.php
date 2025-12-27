@@ -16,15 +16,38 @@
 <body>
     <div class="waiting-container">
         <div class="waiting-card">
-            <h1>Изчакват се участници</h1>
-            <p>Код за присъединяване:</p>
-            <div class="meeting-code"><?php echo $code; ?></div>
-            <button class="copy-btn" id="copyBtn">Копирай кода</button>
 
-            <video id="localVideo" autoplay muted playsinline></video>
-            <p style="color:#555; margin-top:10px;">Вашата камера се вижда тук</p>
+            <div class="waiting-header">
+                <h1>Изчакване на участници...</h1>
+                <p class="waiting-subtitle">
+                    Срещата ще започне, когато друг участник се присъедини
+                </p>
+            </div>
+
+            <div class="code-box">
+                <span class="code-label">Код за среща</span>
+                <div class="meeting-code"><?php echo $code; ?></div>
+                <button class="copy-btn" id="copyBtn">
+                    Копирай кода
+                </button>
+            </div>
+
+            <!-- VIDEO PREVIEW -->
+            <div class="preview-wrapper">
+                <video id="localVideo" autoplay muted playsinline></video>
+                <span class="preview-label">Вие</span>
+            </div>
+
+            <!-- CONTROLS -->
+            <div class="controls">
+                <button id="micBtn"><i class="fa-solid fa-microphone-lines"></i></button>
+                <button class="end-btn leave-btn"><i class="fa-solid fa-phone-slash"></i></button>
+                <button id="camBtn"><i class="fa-solid fa-video"></i></button>
+            </div>
+
         </div>
     </div>
+
 
     <script>
     // Copy meeting code
@@ -52,6 +75,8 @@
 
     initLocalVideo();
     </script>
+
+
 
 </body>
 </html>
