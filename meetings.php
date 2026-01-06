@@ -40,12 +40,27 @@ $meetings = [
     </header>
 
     <main class="main" style="height: 100vh;">
-        <div class="page-top">
-            <div>   
-                <h2>Вашите срещи</h2>
-            </div> 
-            <button class="new-meeting-btn" onclick="startMeeting()">Стартирай нова среща</button>
+        <div class="top-meetings-card">
+            <h2>Вашите срещи</h2>
+            <div class="meeting-actions">
+                <!-- ENTER MEETING LEFT -->
+                <div class="enter-meeting">
+                    <input type="text" id="meetingCodeInput" placeholder="Въведете код за присъединяване">
+                    <button onclick="joinMeeting()">Влез</button>
+                </div>
+
+                <!-- CREATE NEW MEETING RIGHT -->
+                <div class="create-meeting">
+                    <button class="new-meeting-btn" onclick="startMeeting()">
+                        <span>Стартирай нова среща</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
+
 
         <div class="meetings-list">
             <?php foreach($meetings as $meeting): ?>
