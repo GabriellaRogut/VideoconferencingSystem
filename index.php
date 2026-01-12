@@ -97,26 +97,44 @@
             </div>
 
             <!-- Sign Up Form -->
-            <form id="signupForm" class="modal-form active-form">
-                <input type="text" placeholder="Потребителско име" required>
-                <input type="email" placeholder="Имейл" required>
-                <input type="password" placeholder="Парола" required>
-                <button type="submit">Регистрация</button>
+            <form class="modal-form active-form" method="POST" action="assets/action-files/signup.php">
+                <input type="text" name="username" placeholder="Потребителско име" required>
+                <input type="email" name="email" placeholder="Имейл" required>
+                <input type="password" name="password" placeholder="Парола" required>
+                <button type="submit" name="signup">Регистрация</button>
 
                 <p class="toggle-text">Вече имате акаунт? 
                     <span class="toggle-link" id="switchToLogin">Вход</span>
                 </p>
+
+                <?php
+                    if ( isset( $errors_signup) ) {
+
+                        foreach( $errors_signup as $error ) {
+                            echo "<div class='error'>". $error . "</div>";
+                        }
+                    }
+                ?>
             </form>
 
             <!-- Login Form -->
-            <form id="loginForm" class="modal-form">
-                <input type="email" placeholder="Имейл" required>
-                <input type="password" placeholder="Парола" required>
-                <button type="submit">Вход</button>
+            <form class="modal-form" method="POST" action="assets/action-files/login.php">
+                <input type="email" name="email" placeholder="Имейл" required>
+                <input type="password" name="password" placeholder="Парола" required>
+                <button type="submit" name="login">Вход</button>
                 
                 <p class="toggle-text">Все още нямате акаунт? 
                     <span class="toggle-link" id="switchToSignup">Регистрация</span>
                 </p>
+
+                <?php
+                    if ( isset( $errors_login ) ) {
+
+                        foreach( $errors_login as $error ) {
+                            echo "<div class='error'>". $error . "</div>";
+                        }
+                    }
+                ?>
             </form>
         </div>
     </div>

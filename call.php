@@ -1,10 +1,63 @@
+<?php
+session_start();
+include("includes/connection.php");
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit;
+}
+
+$userID = $_SESSION['user_id'];
+
+// Get meeting code from URL
+// $meeting_code = $_GET['code'] ?? null;
+$meeting_code = "TEST1234"; // EXAMPLE
+if (!$meeting_code) {
+    die("Няма предоставен код за срещата.");
+}
+
+// Fetch meeting info
+$stmt = $connection->prepare("
+    SELECT m.id, m.code, m.start_time, m.duration_minutes, u.username AS host_name
+    FROM meetings m
+    JOIN users u ON m.host_id = u.id
+    WHERE m.code = ?
+");
+$stmt->execute([$meeting_code]);
+$meeting = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$meeting) {
+    die("Срещата не съществува.");
+}
+
+// Fetch participants (without host)
+$stmt = $connection->prepare("
+    SELECT u.username, p.role
+    FROM participants p
+    JOIN users u ON p.user_id = u.id
+    WHERE p.meeting_id = ? AND p.role != 'host'
+
+    ORDER BY p.joined_at ASC
+");
+$stmt->execute([$meeting['id']]);
+$participants = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+// Add host at the beginning of the participants list
+array_unshift($participants, $meeting['host_name']);
+
+// Local user name
+$local_username = $_SESSION['username'];
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SignConnect | Обаждане</title>
-
+ 
   <?php include("includes/links.php"); ?>
 
   <link rel="stylesheet" href="assets/css/call-style.css?v=2">
@@ -27,7 +80,10 @@
 
     <header class="header">
       <div class="meeting-info">
-        <span class="meeting-details">Начало: 16:32 · Продължителност: 12 мин</span>
+        <span class="meeting-details">
+          Начало: <?= date('H:i', strtotime($meeting['start_time'])) ?> ·
+          Продължителност: <?= $meeting['duration_minutes'] ?> мин
+        </span>
       </div>
     </header>
 
@@ -45,12 +101,16 @@
         </div>
 
         <!-- REMOTE VIDEO -->
-        <div class="video-card">
-          <video id="remoteVideo" autoplay playsinline></video>
-          <div class="username-bubble">
-            <i class="fa-solid fa-user"></i> Друг участник
-          </div>
-        </div>
+        <?php foreach ($participants as $username){ ?>
+          <?php if ($username !== $local_username){ ?>
+            <div class="video-card">
+              <video autoplay playsinline></video>
+              <div class="username-bubble">
+                <i class="fa-solid fa-user"></i> <?= htmlspecialchars($username) ?>
+              </div>
+            </div>
+          <?php } ?>
+        <?php } ?>
 
       </div>
     </section>
@@ -73,16 +133,16 @@
 
     <section class="participants card">
       <div class="card-header">
-        <h3>Участници <span>(2)</span></h3>
+        <h3>Участници <span>(<?= count($participants) ?>)</span></h3>
         <i class="fa-solid fa-user-plus participants-options"></i>
       </div>
       <ul>
-        <li>
-          <img class="avatar" src="assets/images/default-pfp.png"> Мария Стоянова (Host)
-        </li>
-        <li>
-          <img class="avatar" src="assets/images/default-pfp.png"> Иван Петров
-        </li>
+        <?php foreach ($participants as $index => $username): ?>
+          <li>
+            <img class="avatar" src="assets/images/default-pfp.png">
+            <?= htmlspecialchars($username) ?><?= $index === 0 ? " (Host)" : "" ?>
+          </li>
+        <?php endforeach; ?>
       </ul>
     </section>
 
@@ -131,12 +191,8 @@ document.addEventListener("click", e => {
 });
 </script>
 
-<script src="assets/js/webrtc.js"></script>
-
-
-
 <script>
-  // =========================
+// =========================
 // MIC & CAMERA CONTROLS
 // =========================
 
@@ -177,8 +233,9 @@ camBtn.addEventListener("click", () => {
 
   camBtn.classList.toggle("off", !camEnabled);
 });
-
 </script>
+
+<script src="assets/js/webrtc.js"></script>
 
 </body>
 </html>
