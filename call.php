@@ -37,14 +37,13 @@ $stmt = $connection->prepare("
     FROM participants p
     JOIN users u ON p.user_id = u.id
     WHERE p.meeting_id = ? AND p.role != 'host'
-
     ORDER BY p.joined_at ASC
 ");
 $stmt->execute([$meeting['id']]);
 $participants = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
 // Add host at the beginning of the participants list
-array_unshift($participants, $meeting['host_name']);
+// array_unshift($participants, $meeting['host_name']);
 
 // Local user name
 $local_username = $_SESSION['username'];

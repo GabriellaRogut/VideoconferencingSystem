@@ -81,7 +81,7 @@ if ($meetings) {
 
                 <!-- CREATE NEW MEETING RIGHT -->
                 <div class="create-meeting">
-                    <button class="new-meeting-btn" onclick="startMeeting()">
+                    <button class="new-meeting-btn">
                         <span>Стартирай нова среща</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -128,20 +128,12 @@ if ($meetings) {
     </footer>
 
     <script>
-    function startMeeting() {
-        const code = Math.random().toString(36).substring(2,8).toUpperCase();
-        window.location.href = `meeting_wait.php?code=${code}`;
-    }
-    </script>
-
-    <script>
-        // START MEETING BUTTON
+        // START MEETING
         const startBtn = document.querySelector(".new-meeting-btn");
         startBtn.addEventListener("click", () => {
-            // Generate a simple meeting code
+            // Generate meeting code
             const meetingCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
-            // Open new page for host
             window.location.href = `waiting.php?code=${meetingCode}&host=1`;
         });
     </script>
