@@ -99,7 +99,7 @@
             </div>
 
             <!-- Sign Up Form -->
-            <form class="modal-form active-form" method="POST" action="assets/action-files/signup.php">
+            <form class="modal-form active-form" method="POST" id="signupForm" action="assets/action-files/signup.php">
                 <input type="text" name="username" placeholder="Потребителско име" required>
                 <input type="email" name="email" placeholder="Имейл" required>
                 <input type="password" name="password" placeholder="Парола" required>
@@ -120,10 +120,10 @@
             </form>
 
             <!-- Login Form -->
-            <form class="modal-form" method="POST" action="assets/action-files/login.php">
+            <form class="modal-form" method="POST" id="loginForm" action="assets/action-files/login.php">
                 <input type="email" name="email" placeholder="Имейл" required>
                 <input type="password" name="password" placeholder="Парола" required>
-                <button type="submit" name="login">Вход</button>
+                <button type="submit" name="login" value="login">Вход</button>
                 
                 <p class="toggle-text">Все още нямате акаунт? 
                     <span class="toggle-link" id="switchToSignup">Регистрация</span>
