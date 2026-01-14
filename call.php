@@ -1,6 +1,5 @@
 <?php
-session_start();
-include("includes/connection.php");
+include_once("includes/connection.php");
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -12,7 +11,7 @@ $userID = $_SESSION['user_id'];
 
 // Get meeting code from URL
 // $meeting_code = $_GET['code'] ?? null;
-$meeting_code = "TEST1234"; // EXAMPLE !!
+$meeting_code = "TEST1234";
 
 
 if (!$meeting_code) {

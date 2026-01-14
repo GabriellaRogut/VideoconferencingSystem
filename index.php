@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SignConnect — Видео Конференции за Всеки</title>
 
-    <?php include("includes/links.php"); ?>
+    <?php include("includes/links.php");
+    include_once("includes/connection.php"); ?>
 
     <!-- Styles -->
     <link rel="stylesheet" href="assets/css/landing-style.css">
@@ -13,6 +14,12 @@
 
 
 <body>
+
+<?php
+//print_r($_SESSION);
+?>
+
+
     <header class="main-header">
         <div class="logo">SignConnect</div>
         <div class="menu-toggle">&#9776;</div>
@@ -90,16 +97,16 @@
     </footer>
 
     <!-- Modal -->
-    <div class="modal-overlay" id="modal">
+    <div class="modal-overlay<?php if ( isset( $_SESSION['errors_login']  ) || isset( $_SESSION['errors_signup'] ) ) echo " active" ?>" id="modal">
         <div class="modal">
             <span class="close" id="closeModal">&times;</span>
             <div class="modal-tabs">
-                <button id="signupTab" class="active-tab">Регистрация</button>
-                <button id="loginTab">Вход</button>
+                <button id="signupTab" class="<?php if( isset( $_SESSION['errors_signup'] ) ) echo " active-tab"  ?>">Регистрация</button>
+                <button id="loginTab" class="<?php if( isset( $_SESSION['errors_login'] ) ) echo " active-tab"  ?>">Вход</button>
             </div>
 
             <!-- Sign Up Form -->
-            <form class="modal-form active-form" method="POST" id="signupForm" action="assets/action-files/signup.php">
+            <form class="modal-form <?php if( isset( $_SESSION['errors_signup'] ) ) echo " active-form"  ?>""  method="POST" id="signupForm" action="assets/action-files/signup.php">
                 <input type="text" name="username" placeholder="Потребителско име" required>
                 <input type="email" name="email" placeholder="Имейл" required>
                 <input type="password" name="password" placeholder="Парола" required>
@@ -110,17 +117,19 @@
                 </p>
 
                 <?php
-                    if ( isset( $errors_signup) ) {
+                    if ( isset( $_SESSION['errors_signup'] ) ) {
 
-                        foreach( $errors_signup as $error ) {
+                        foreach( $_SESSION['errors_signup'] as $error ) {
                             echo "<div class='error'>". $error . "</div>";
+
+                            unset( $_SESSION['errors_signup'] );
                         }
                     }
                 ?>
             </form>
 
             <!-- Login Form -->
-            <form class="modal-form" method="POST" id="loginForm" action="assets/action-files/login.php">
+            <form class="modal-form<?php if( isset( $_SESSION['errors_login'] ) ) echo " active-form"  ?>" method="POST" id="loginForm" action="assets/action-files/login.php">
                 <input type="email" name="email" placeholder="Имейл" required>
                 <input type="password" name="password" placeholder="Парола" required>
                 <button type="submit" name="login" value="login">Вход</button>
@@ -130,10 +139,12 @@
                 </p>
 
                 <?php
-                    if ( isset( $errors_login ) ) {
+                    if (isset( $_SESSION['errors_login'] ) ) {
 
-                        foreach( $errors_login as $error ) {
+                        foreach( $_SESSION['errors_login'] as $error ) {
                             echo "<div class='error'>". $error . "</div>";
+
+                            unset( $_SESSION['errors_login'] );
                         }
                     }
                 ?>
@@ -151,11 +162,6 @@
         },{threshold:0.2});
         cards.forEach(card=>observer.observe(card));
 
-        // Modal open/close
-        const modal = document.getElementById('modal');
-        document.querySelectorAll('.open-modal').forEach(btn=>{
-            btn.addEventListener('click',()=> modal.classList.add('active'));
-        });
         document.getElementById('closeModal').addEventListener('click',()=> modal.classList.remove('active'));
         window.addEventListener('click', e=> {if(e.target===modal) modal.classList.remove('active');});
 
@@ -167,6 +173,17 @@
         const switchToLogin = document.getElementById('switchToLogin');
         const switchToSignup = document.getElementById('switchToSignup');
 
+               // Modal open/close
+        const modal = document.getElementById('modal');
+        document.querySelectorAll('.open-modal').forEach(btn=>{
+            btn.addEventListener('click',()=> { 
+                modal.classList.add('active') ;
+                signupTab.classList.add('active-tab'); loginTab.classList.remove('active-tab');
+                signupForm.classList.add('active-form'); loginForm.classList.remove('active-form');          
+            } );
+ 
+        });
+ 
         signupTab.addEventListener('click',()=>{
             signupTab.classList.add('active-tab'); loginTab.classList.remove('active-tab');
             signupForm.classList.add('active-form'); loginForm.classList.remove('active-form');

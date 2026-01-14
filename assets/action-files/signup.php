@@ -1,5 +1,4 @@
 <?php
-session_start();
 include("../../includes/connection.php");
 
 if (isset($_POST['signup'])) {
@@ -8,11 +7,11 @@ if (isset($_POST['signup'])) {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
-    $errors_signup = [];
+    $_SESSION['errors_signup'] = [];
 
 
     if (!$username || !$email || !$password) {
-        $errors_signup[] = "Попълнете всички полета!";
+        $_SESSION['errors_signup'][] = "Попълнете всички полета!";
     }
 
 
@@ -23,11 +22,11 @@ if (isset($_POST['signup'])) {
     ");
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
-        $errors_signup[] = "Този имейл вече съществува!";
+        $_SESSION['errors_signup'][] = "Този имейл вече съществува!";
     }
 
 
-    if (!$errors_signup) {
+    if (!$_SESSION['errors_signup']) {
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
         $connection->prepare("
@@ -42,4 +41,7 @@ if (isset($_POST['signup'])) {
         exit;
     }
 }
+
+      echo "<script>document.location.href='../../index.php';</script>";
+        exit;
 ?>

@@ -1,5 +1,4 @@
 <?php
-session_start();
 include("../../includes/connection.php");
 
 if (isset($_POST['login'])) {
@@ -7,14 +6,14 @@ if (isset($_POST['login'])) {
     $email_input = trim($_POST['email']);
     $password_input = $_POST['password'];
 
-    $errors_login = [];
+    $_SESSION['errors_login'] = [];
 
     if (!$email_input || !$password_input) {
-        $errors_login[] = "Попълнете всички полета!";
+        $_SESSION['errors_login'][] = "Попълнете всички полета!";
     }
     
 
-    if ( !$errors_login ) {
+    if ( !$_SESSION['errors_login'] ) {
         $stmt = $connection->prepare("
             SELECT * 
             FROM users 
@@ -30,8 +29,13 @@ if (isset($_POST['login'])) {
             echo "<script>document.location.href='../../account.php';</script>";
             exit;
         } else {
-            $_SESSION['errors_login'] = "Невалиден вход!";
+            $_SESSION['errors_login'][] = "Невалиден вход!";
         }
     }
+ 
+
 }
+
+         echo "<script>document.location.href='../../index.php';</script>";
+          exit;
 ?>
