@@ -48,6 +48,12 @@
         </div>
     </div>
 
+    <!-- Place at the end of body or main content -->
+<div class="sidebar-toggle" id="sidebarToggle">
+  <i class="fa-solid fa-angle-left"></i>
+</div>
+
+
 
     <script>
     // Copy meeting code
@@ -77,6 +83,26 @@
     </script>
 
 
+
+    <script>
+        const sidebar = document.querySelector('.right-sidebar');
+const toggleBtn = document.getElementById('sidebarToggle');
+
+toggleBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('hidden');
+
+  // Swap arrow icon
+  const icon = toggleBtn.querySelector('i');
+  if (sidebar.classList.contains('hidden')) {
+    icon.classList.remove('fa-angle-right');
+    icon.classList.add('fa-angle-left');
+  } else {
+    icon.classList.remove('fa-angle-left');
+    icon.classList.add('fa-angle-right');
+  }
+});
+
+    </script>
 
 </body>
 </html>

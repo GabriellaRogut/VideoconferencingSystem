@@ -62,6 +62,8 @@ if ($meetings) {
 <body>
     <header class="main-header">
         <div class="logo">SignConnect</div>
+        <div class="menu-toggle">&#9776;</div>
+        
         <nav class="account-nav">
             <a href="index.php">Начало</a>
             <a class="active" href="meetings.php">Срещи</a>
@@ -115,7 +117,7 @@ if ($meetings) {
                     </div>
                 <?php } ?>
             <?php } else {?>
-                <div>
+                <div class="no-meetings">
                     <p>Няма проведени видеоконференции за показване.</p>
                 </div>
 

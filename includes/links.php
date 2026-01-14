@@ -8,3 +8,6 @@
 
 <!-- General Styles -->
 <link rel="stylesheet" href="assets/css/general.css?v=2">
+
+<!-- General scripts -->
+<script src="assets/js/main.js" defer></script>

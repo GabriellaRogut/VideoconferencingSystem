@@ -43,6 +43,7 @@ if (!$user) {
 
 <header class="main-header">
     <div class="logo">SignConnect</div>
+    <div class="menu-toggle">&#9776;</div>
 
     <nav class="account-nav">
         <a href="index.php">Начало</a>

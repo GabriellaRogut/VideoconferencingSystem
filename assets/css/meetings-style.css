@@ -133,7 +133,28 @@
     box-shadow: 0 12px 28px rgba(0,0,0,0.22);
 }
 
-/* --- RESPONSIVE --- */
+/* --- NO MEETINGS MESSAGE --- */
+.no-meetings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    background: #f0f4ff;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 19px;
+    color: #4f6fa4;
+    font-weight: 600;
+    margin: 20px 0;
+}
+
+
+
+/* --- RESPONSIVE UPDATES --- */
+
+/* Tablets & small screens */
 @media(max-width: 768px){
     .meeting-actions {
         flex-direction: column;
@@ -143,82 +164,127 @@
     .create-meeting {
         justify-content: center;
     }
+
+    .enter-meeting input {
+        font-size: 13px;
+        padding: 12px 14px;
+    }
+
+    .enter-meeting button,
+    .create-meeting .new-meeting-btn {
+        padding: 14px 24px;
+        font-size: 14px;
+    }
 }
 
-/* --- MEETINGS LIST --- */
-.meetings-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+/* Small phones */
+@media(max-width: 480px){
+    .main {
+        padding: 20px;
+        gap: 15px;
+    }
+
+    .top-meetings-card {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .top-meetings-card h2 {
+        font-size: 22px;
+    }
+
+    .meeting-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .enter-meeting input {
+        flex: 1;
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .enter-meeting button {
+        padding: 12px 18px;
+        font-size: 13px;
+    }
+
+    .create-meeting .new-meeting-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 18px;
+        font-size: 14px;
+    }
+
+    .meetings-list {
+        gap: 15px;
+    }
+
+    .meeting-card {
+        padding: 16px;
+        border-radius: 18px;
+    }
+
+    .meeting-info .title {
+        font-size: 16px;
+    }
+
+    .meeting-info .datetime {
+        font-size: 12px;
+    }
+
+    .participants-list {
+        gap: 8px;
+    }
+
+    .participants-list .participant {
+        padding: 4px 8px;
+        font-size: 11px;
+        gap: 4px;
+    }
+
+    .participants-list .participant img {
+        width: 28px;
+        height: 28px;
+    }
 }
 
-/* --- INDIVIDUAL MEETING CARD --- */
-.meeting-card {
-    background: #fff;
-    border-radius: 22px;
-    padding: 22px;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+/* Extra small devices (very small screens, e.g., old phones) */
+@media(max-width: 360px){
+    .enter-meeting input {
+        font-size: 11px;
+        padding: 8px 10px;
+    }
+
+    .enter-meeting button,
+    .create-meeting .new-meeting-btn {
+        font-size: 12px;
+        padding: 10px 16px;
+    }
+
+    .top-meetings-card h2 {
+        font-size: 20px;
+    }
+
+    .meeting-card {
+        padding: 12px;
+    }
+
+    .meeting-info .title {
+        font-size: 15px;
+    }
+
+    .meeting-info .datetime {
+        font-size: 11px;
+    }
+
+    .participants-list .participant {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+
+    .participants-list .participant img {
+        width: 24px;
+        height: 24px;
+    }
 }
-
-.meeting-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.14);
-}
-
-.meeting-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.meeting-info .title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #4f6fa4;
-}
-
-.meeting-info .datetime {
-    font-size: 14px;
-    color: #6c6c6c;
-}
-
-/* --- PARTICIPANTS --- */
-.participants-list {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.participants-list .participant {
-    /* background: linear-gradient(135deg,#5094db,#1262b8, #4f7ddb);
-    color: #fff; */
-    background: #e9f1fde9; 
-    color: #4f6fa4;  
-    padding: 5px 12px;
-    border-radius: 14px;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.participants-list .participant:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-}
-
-.participants-list .participant img {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
-    border: 2px solid #fff;
-}
-
-

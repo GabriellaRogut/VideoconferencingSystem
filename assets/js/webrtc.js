@@ -1,100 +1,94 @@
-// -----------------------------
-// Elements
-// -----------------------------
 const localVideo = document.getElementById("localVideo");
-const remoteVideo = document.getElementById("remoteVideo");
+const remoteVideo = document.querySelector(".video-card video:not(#localVideo)");
 const localVideoCard = document.getElementById("localVideoCard");
 
-// -----------------------------
-// Variables
-// -----------------------------
 let localStream;
 let pc;
+
+const meetingCode = new URLSearchParams(window.location.search).get("code");
 const ws = new WebSocket("ws://localhost:3000");
 
-const config = {
-  iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
-};
+const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
 
 // -----------------------------
-// Initialize Media & PeerConnection
+// Initialize media
 // -----------------------------
-async function initMediaAndStart() {
+async function initMedia() {
   try {
-    // Get user media
     localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     localVideo.srcObject = localStream;
-
-    // Create PeerConnection
-    pc = new RTCPeerConnection(config);
-
-    pc.onicecandidate = e => {
-      if (e.candidate) ws.send(JSON.stringify({ type: "ice", candidate: e.candidate }));
-    };
-
-    pc.ontrack = e => {
-      remoteVideo.srcObject = e.streams[0];
-    };
-
-    // Add local tracks
-    localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
 
     // Start speaking detection
     detectSpeaking(localStream, localVideoCard);
 
-    // Start call when WebSocket is open
-    if (ws.readyState === WebSocket.OPEN) {
-      await startCall();
-    } else {
-      ws.onopen = async () => {
-        await startCall();
-      };
-    }
-
   } catch (err) {
     console.error("Error accessing media devices:", err);
+    alert("Не може да се достъпи камерата или микрофона");
   }
 }
 
 // -----------------------------
-// Start WebRTC call
+// Create PeerConnection
+// -----------------------------
+function createPeerConnection() {
+  pc = new RTCPeerConnection(config);
+
+  pc.onicecandidate = (e) => {
+    if (e.candidate) {
+      ws.send(JSON.stringify({ type: "ice", candidate: e.candidate }));
+    }
+  };
+
+  pc.ontrack = (e) => {
+    remoteVideo.srcObject = e.streams[0];
+  };
+
+  localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+}
+
+// -----------------------------
+// Start call (offer)
 // -----------------------------
 async function startCall() {
-  if (!pc) {
-    console.error("PeerConnection not initialized yet!");
-    return;
-  }
-
+  createPeerConnection();
   const offer = await pc.createOffer();
   await pc.setLocalDescription(offer);
   ws.send(JSON.stringify({ type: "offer", offer }));
 }
 
 // -----------------------------
-// Handle incoming WebSocket messages
+// Handle WebSocket messages
 // -----------------------------
+ws.onopen = () => {
+  ws.send(JSON.stringify({ type: "join", code: meetingCode }));
+};
+
 ws.onmessage = async (msg) => {
   const data = JSON.parse(msg.data);
 
-  if (!pc) return;
-
-  if (data.type === "offer") {
+  if (!pc && data.type === "offer") {
+    createPeerConnection();
     await pc.setRemoteDescription(data.offer);
     const answer = await pc.createAnswer();
     await pc.setLocalDescription(answer);
     ws.send(JSON.stringify({ type: "answer", answer }));
   }
 
-  if (data.type === "answer") {
+  if (data.type === "answer" && pc) {
     await pc.setRemoteDescription(data.answer);
   }
 
-  if (data.type === "ice") {
+  if (data.type === "ice" && pc) {
     try {
       await pc.addIceCandidate(data.candidate);
     } catch (err) {
       console.error("Error adding ICE candidate:", err);
     }
+  }
+
+  // If second user joined first, we start the call
+  if (data.type === "start-call") {
+    if (!pc) startCall();
   }
 };
 
@@ -106,9 +100,9 @@ function detectSpeaking(stream, videoCardEl) {
 
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   const audioContext = new AudioContext();
-
   const analyser = audioContext.createAnalyser();
   analyser.fftSize = 1024;
+
   const microphone = audioContext.createMediaStreamSource(stream);
   microphone.connect(analyser);
 
@@ -125,7 +119,7 @@ function detectSpeaking(stream, videoCardEl) {
 
   function checkVolume() {
     analyser.getByteFrequencyData(dataArray);
-    const volume = dataArray.reduce((a,b) => a+b,0) / dataArray.length;
+    const volume = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
 
     if (volume > THRESHOLD && !speaking) {
       speaking = true;
@@ -146,4 +140,4 @@ function detectSpeaking(stream, videoCardEl) {
 // -----------------------------
 // Initialize
 // -----------------------------
-initMediaAndStart();
+initMedia();

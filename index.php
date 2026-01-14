@@ -15,6 +15,8 @@
 <body>
     <header class="main-header">
         <div class="logo">SignConnect</div>
+        <div class="menu-toggle">&#9776;</div>
+        
         <nav>
             <a href="#features">Характеристики</a>
             <a href="#demo">Демо</a>
@@ -176,6 +178,8 @@
         switchToLogin.addEventListener('click',()=> loginTab.click());
         switchToSignup.addEventListener('click',()=> signupTab.click());
     </script>
+
+
 
 </body>
 </html>

@@ -12,7 +12,9 @@ $userID = $_SESSION['user_id'];
 
 // Get meeting code from URL
 // $meeting_code = $_GET['code'] ?? null;
-$meeting_code = "TEST1234"; // EXAMPLE
+$meeting_code = "TEST1234"; // EXAMPLE !!
+
+
 if (!$meeting_code) {
     die("Няма предоставен код за срещата.");
 }
@@ -96,7 +98,7 @@ $local_username = $_SESSION['username'];
           <div class="username-bubble">
             <i class="fa-solid fa-user"></i> Вие
           </div>
-          <div class="subtitle">Това са примерни субтитри.</div>
+          <div class="subtitle show">Това са примерни субтитри.</div> <!-- .show on active subtitles !!! -->
         </div>
 
         <!-- REMOTE VIDEO -->
@@ -178,60 +180,101 @@ $local_username = $_SESSION['username'];
 
 <!-- CHAT MENU JS -->
 <script>
-const icon = document.querySelector(".chat-options");
-const menu = document.getElementById("chatMenu");
+  const icon = document.querySelector(".chat-options");
+  const menu = document.getElementById("chatMenu");
 
-icon.addEventListener("click", () => {
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
-});
+  icon.addEventListener("click", () => {
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+  });
 
-document.addEventListener("click", e => {
-  if (!e.target.closest(".menu-wrapper")) menu.style.display = "none";
-});
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".menu-wrapper")) menu.style.display = "none";
+  });
 </script>
 
 <script>
-// =========================
-// MIC & CAMERA CONTROLS
-// =========================
+  // =========================
+  // MIC & CAMERA CONTROLS
+  // =========================
 
-const muteBtn = document.getElementById("muteBtn");
-const camBtn  = document.getElementById("camBtn");
+  const muteBtn = document.getElementById("muteBtn");
+  const camBtn  = document.getElementById("camBtn");
 
-let micEnabled = true;
-let camEnabled = true;
+  let micEnabled = true;
+  let camEnabled = true;
 
-// Toggle microphone
-muteBtn.addEventListener("click", () => {
-  if (!localStream) return;
+  // Toggle microphone
+  muteBtn.addEventListener("click", () => {
+    if (!localStream) return;
 
-  localStream.getAudioTracks().forEach(track => {
-    track.enabled = !track.enabled;
-    micEnabled = track.enabled;
+    localStream.getAudioTracks().forEach(track => {
+      track.enabled = !track.enabled;
+      micEnabled = track.enabled;
+    });
+
+    muteBtn.innerHTML = micEnabled
+      ? '<i class="fa-solid fa-microphone-lines"></i>'
+      : '<i class="fa-solid fa-microphone-slash"></i>';
+
+    muteBtn.classList.toggle("off", !micEnabled);
   });
 
-  muteBtn.innerHTML = micEnabled
-    ? '<i class="fa-solid fa-microphone-lines"></i>'
-    : '<i class="fa-solid fa-microphone-slash"></i>';
+  // Toggle camera
+  camBtn.addEventListener("click", () => {
+    if (!localStream) return;
 
-  muteBtn.classList.toggle("off", !micEnabled);
-});
+    localStream.getVideoTracks().forEach(track => {
+      track.enabled = !track.enabled;
+      camEnabled = track.enabled;
+    });
 
-// Toggle camera
-camBtn.addEventListener("click", () => {
-  if (!localStream) return;
+    camBtn.innerHTML = camEnabled
+      ? '<i class="fa-solid fa-video"></i>'
+      : '<i class="fa-solid fa-video-slash"></i>';
 
-  localStream.getVideoTracks().forEach(track => {
-    track.enabled = !track.enabled;
-    camEnabled = track.enabled;
+    camBtn.classList.toggle("off", !camEnabled);
+  });
+</script>
+
+
+<!-- SIDEBAR CONTROL  -->
+<script>
+  const toggleBtn = document.createElement("div");
+  toggleBtn.classList.add("sidebar-toggle");
+  toggleBtn.innerHTML = "&#9654;"; // right arrow
+  document.body.appendChild(toggleBtn);
+
+  const rightSidebar = document.querySelector(".right-sidebar");
+
+  // hidden on small screens
+  if (window.innerWidth <= 1200) {
+    rightSidebar.classList.add("hidden");
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    if (rightSidebar.classList.contains("hidden")) {
+      rightSidebar.classList.remove("hidden");
+      rightSidebar.classList.add("visible");
+      toggleBtn.innerHTML = "&#10005;"; // X
+    } else {
+      rightSidebar.classList.remove("visible");
+      rightSidebar.classList.add("hidden");
+      toggleBtn.innerHTML = "&#9654;"; // arrow
+    }
   });
 
-  camBtn.innerHTML = camEnabled
-    ? '<i class="fa-solid fa-video"></i>'
-    : '<i class="fa-solid fa-video-slash"></i>';
 
-  camBtn.classList.toggle("off", !camEnabled);
-});
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 1200) {
+      rightSidebar.classList.remove("hidden", "visible");
+      toggleBtn.style.display = "none";
+    } else {
+      toggleBtn.style.display = "block";
+      rightSidebar.classList.add("hidden");
+      rightSidebar.classList.remove("visible");
+      toggleBtn.innerHTML = "&#9654;";
+    }
+  });
 </script>
 
 <script src="assets/js/webrtc.js"></script>
