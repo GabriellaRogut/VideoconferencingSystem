@@ -1,5 +1,5 @@
 <?php
-include("../../includes/connection.php");
+include_once("../../includes/connection.php");
 
 if (isset($_POST['login'])) {
     // $username_input = trim($_POST['username']);

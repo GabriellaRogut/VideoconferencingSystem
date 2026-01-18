@@ -1,6 +1,5 @@
 <?php
-session_start();
-include("../../includes/connection.php");
+include_once("../../includes/connection.php");
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../../index.php");
@@ -16,11 +15,11 @@ if (isset($_POST['update_account'])) {
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
 
-    $errors_update = [];
+    $_SESSION['errors_update'] = [];
 
     // validation
     if (!$username || !$email) {
-        $errors_update[] = "Име и имейл са задължителни.";
+        $_SESSION['errors_update'][] = "Име и имейл са задължителни полета.";
     }
 
     // current password hash
@@ -35,17 +34,17 @@ if (isset($_POST['update_account'])) {
     // Check if changing password
     if ($new_password) {
         if (!$current_password) {
-            $errors_update[] = "Въведете текуща парола.";
+            $_SESSION['errors_update'] [] = "Въведете текуща парола.";
         } elseif (!password_verify($current_password, $user['password_hash'])) {
-            $errors_update[] = "Текущата парола е грешна.";
+            $_SESSION['errors_update'] [] = "Текущата парола е грешна.";
         } elseif ($new_password !== $confirm_password) {
-            $errors_update[] = "Паролата не съвпада.";
+            $_SESSION['errors_update'] [] = "Паролата не съвпада.";
         } else {
             $new_password_hash = password_hash($new_password, PASSWORD_DEFAULT);
         }
     }
 
-    if (!$errors_update) {
+    if (!$_SESSION['errors_update'] ) {
         // Update username and email
         $sql = "
             UPDATE users 
@@ -66,7 +65,7 @@ if (isset($_POST['update_account'])) {
         header("Location: ../../account.php?success=1");
         exit;
     } else {
-        $_SESSION['edit_errors'] = $errors_update;
+        $_SESSION['edit_errors'] = $_SESSION['errors_update'] ;
         header("Location: ../../account.php");
         exit;
     }

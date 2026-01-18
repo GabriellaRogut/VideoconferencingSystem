@@ -75,7 +75,7 @@
 /* COPY BUTTON */
 .copy-btn {
     background: linear-gradient(135deg,#5094db,#1262b8);
-    color: #fff;
+    color: var(--color-white);
     border: none;
     border-radius: 14px;
     padding: 12px 20px;
@@ -110,7 +110,7 @@
     bottom: 12px;
     left: 12px;
     background: rgba(0,0,0,0.6);
-    color: white;
+    color: var(--color-white);
     padding: 4px 10px;
     border-radius: 8px;
     font-size: 0.8rem;
@@ -125,7 +125,7 @@
 
 .controls button {
   padding: 12px 18px;
-  background: white;
+  background: var(--controls-bg);
   border-radius: 14px;
   border: 1px solid #cbd6f0;
   cursor: pointer;
@@ -136,13 +136,13 @@
 
 .controls button:hover {
   transform: scale(1.05);
-  background: rgba(241, 241, 241, 0.586);
+  background: #f1f1f195;
 }
 
 .leave-btn {
-  background: #d9534f !important;
+  background: var(--red) !important;
   border: none !important;
-  color: #fff;
+  color: var(--color-white);
   font-weight: 500;
   font-size: 15px;
   align-items: center;
@@ -150,6 +150,6 @@
 }
 
 .leave-btn:hover {
-  background: #b13531 !important;
+  background: var(--red-hover) !important;
 }
 

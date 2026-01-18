@@ -77,7 +77,17 @@ if (!$user) {
 
     <!-- RIGHT SIDE: Account Settings -->
     <div class="settings-card acc-card" id="view-account">
-        <h2 class="section-title">Настройки</h2>
+        <div class="section-header">
+            <h2 class="section-title">Настройки</h2>
+            <div class="theme-toggle">
+                <input type="checkbox" id="themeSwitch">
+                <label for="themeSwitch" class="toggle-label">
+                    <span class="toggle-ball"></span>
+                </label>
+            </div>
+        </div>
+
+
 
         <form class="settings-form">
             
@@ -99,13 +109,15 @@ if (!$user) {
 
         <hr>
         <div class="danger-container">
-            <button class="danger-btn">Изтриване на акаунта</button>
+            <button class="danger-btn open-delete-modal">Изтриване на акаунта</button>
         </div>
 
     </div>
 
 
     <div class="settings-card acc-card" id="edit-account"  style="display:none;">
+
+    <!--  //isset($_SESSION['edit_errors']) ? 'active' : ''   (change js)--> 
 
         <h2 class="section-title">Настройки на Акаунта</h2>
 
@@ -141,17 +153,18 @@ if (!$user) {
             </div>
         </form>
         <?php
-            if ( isset( $edit_errors) ) {
+            if ( isset( $_SESSION['edit_errors']) ) {
 
-                foreach( $edit_errors as $error ) {
+                foreach( $_SESSION['edit_errors'] as $error ) {
                     echo "<div class='error'>". $error . "</div>";
                 }
+                unset( $_SESSION['edit_errors'] );
             }
         ?>
 
         <hr style="margin: 20px;">
 
-        <button class="danger-btn danger-btn-edit">Изтриване на акаунта</button>
+        <button class="danger-btn danger-btn-edit open-delete-modal">Изтриване на акаунта</button>
     </div>
 
 </section>
@@ -159,6 +172,24 @@ if (!$user) {
 <footer>
     © 2025 SignConnect. Всички права запазени.
 </footer>
+
+
+<!-- DELETE ACCOUNT MODAL -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Сигурни ли сте, че искате да изтриете профила си?</h2>
+        <p>Всички данни, свързани с този акаунт, ще бъдат изтрити и не подлежат на възобновяване. 
+            Това включва лична информация, история на срещи и други свързани записи.</p>
+        <div class="modal-buttons">
+            <form method="POST" action="assets/action-files/delete-account.php">
+                <button type="submit" class="danger-btn">Да, изтрий</button>
+            </form>
+            <button class="cancel-btn modal-cancel">Не</button>
+        </div>
+    </div>
+</div>
+
 
 </body>
 </html>
@@ -183,3 +214,56 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 </script>
+
+
+<!-- delete modal js -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("deleteModal");
+
+    const openBtns = document.querySelectorAll(".open-delete-modal");
+    const closeBtn = modal.querySelector(".close");
+    const cancelBtn = modal.querySelector(".modal-cancel");
+
+    // Open modal
+    openBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            modal.style.display = "block";
+        });
+    });
+
+    // Close modal
+    closeBtn.addEventListener("click", () => modal.style.display = "none");
+    cancelBtn.addEventListener("click", () => modal.style.display = "none");
+
+    // Close modal if clicking outside modal content
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) modal.style.display = "none";
+    });
+});
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const themeSwitch = document.getElementById("themeSwitch");
+
+    // Load saved theme from localStorage
+    if (localStorage.getItem("theme") === "dark") {
+        document.documentElement.classList.add("dark-mode"); 
+        themeSwitch.checked = true;
+    }
+
+    // Toggle theme on change
+    themeSwitch.addEventListener("change", () => {
+        if (themeSwitch.checked) {
+            document.documentElement.classList.add("dark-mode"); 
+            localStorage.setItem("theme", "dark");
+        } else {
+            document.documentElement.classList.remove("dark-mode"); 
+            localStorage.setItem("theme", "light");
+        }
+    });
+});
+</script>
+

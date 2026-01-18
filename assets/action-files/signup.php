@@ -1,5 +1,5 @@
 <?php
-include("../../includes/connection.php");
+include_once("../../includes/connection.php");
 
 if (isset($_POST['signup'])) {
 

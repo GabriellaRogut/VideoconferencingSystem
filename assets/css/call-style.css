@@ -37,7 +37,7 @@
   padding: 4px 10px;
   text-align: center;
   background: rgba(0, 0, 0, 0.496);
-  color: #fff;
+  color: var(--color-white);
   font-size: 15px;
   border-radius: 3px;
   backdrop-filter: blur(4px);
@@ -57,7 +57,7 @@
 
 /* SIDEBAR */
 .sidebar {
-  background: #fff;
+  background: var(--color-white);
   border-right: 1px solid #eee;
   padding: 20px 10px;
   display: flex;
@@ -93,7 +93,7 @@
 }
 
 .end-btn {
-  color: #fff;
+  color: var(--color-white);
   background: var(--red);
   padding: 10px 18px;
   width: 68px;
@@ -176,7 +176,7 @@
   bottom: 10px;
   left: 10px;
   background: #00000099;
-  color: #fff;
+  color: var(--color-white);
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 12px;
@@ -193,33 +193,32 @@
 }
 
 
-/* --- GRID LOGIC ??? --- */
 
 /* 1 participant → full width */
-.video-grid {
+/* .video-grid {
   grid-template-columns: 1fr;
 }
 
 /* 2 participants → side by side */
-.video-grid:has(.video-card:nth-child(2)):not(:has(.video-card:nth-child(3))) {
+/* .video-grid:has(.video-card:nth-child(2)):not(:has(.video-card:nth-child(3))) {
   grid-template-columns: 1fr 1fr;
 }
 
 /* 3–4 participants → 2x2 grid */
-.video-grid:has(.video-card:nth-child(3)),
+/* .video-grid:has(.video-card:nth-child(3)),
 .video-grid:has(.video-card:nth-child(4)) {
   grid-template-columns: repeat(2, 1fr);
 }
 
 /* 5–9 participants → 3x3 */
-.video-grid:has(.video-card:nth-child(5)) {
+/* .video-grid:has(.video-card:nth-child(5)) {
   grid-template-columns: repeat(3, 1fr);
 }
 
 /* 10–16 participants → 4x4 */
-.video-grid:has(.video-card:nth-child(10)) {
+/* .video-grid:has(.video-card:nth-child(10)) {
   grid-template-columns: repeat(4, 1fr);
-}
+}   */
 
 
 
@@ -242,7 +241,7 @@
 
 .controls button {
   padding: 10px 16px;
-  background: white;
+  background: var(--color-white);
   border-radius: 10px;
   border: none;
   cursor: pointer;
@@ -253,8 +252,8 @@
 }
 
 .leave-btn {
-  background: #d9534f !important;
-  color: #fff;
+  background: var(--red) !important;
+  color: var(--color-white);
   font-weight: 500;
   font-size: 15px;
   align-items: center;
@@ -262,7 +261,7 @@
 }
 
 .leave-btn:hover {
-  background: #b13531 !important;
+  background: var(--red-hover) !important;
 }
 
 /* RRIGHT SIDE */
@@ -283,7 +282,7 @@
 .participants {
   padding: 14px;
   border-radius: 25px;
-  background: #fff;
+  background: var(--color-white);
   box-shadow: 0 6px 15px var(--shadow-light);
 }
 
@@ -360,7 +359,7 @@
   position: absolute;
   right: 0;
   top: 30px;
-  background: white;
+  background: var(--color-white);
   border: 1px solid #ccc;
   width: 140px;
   border-radius: 6px;
@@ -389,7 +388,7 @@
 /* CHAT */
 .messages {
   box-shadow: 0 6px 15px var(--shadow-light); 
-  background: #fff;
+  background: var(--color-white);
   border-radius: 25px;
   flex: 1;
   display: flex;
@@ -437,7 +436,7 @@
   position: absolute;
   right: 5px;
   background: #5094db;
-  color: white;
+  color: var(--color-white);
   border: none;
   border-radius: 50%;
   width: 30px;
@@ -542,7 +541,7 @@
   right: 0;
   transform: translateY(-50%);
   background: #5480ab;
-  color: white;
+  color: var(--color-white);
   font-size: 20px;
   padding: 8px 12px;
   border-radius: 8px 0 0 8px;

@@ -9,7 +9,7 @@ body {
   align-items: center; 
   text-align: center;
   padding: 6rem 2rem 4rem 2rem;
-  background: linear-gradient(135deg,var(--color-primary),var(--color-secondary));
+  background: var(--gradient-bg);
   color: var(--color-white);
 }
 
@@ -143,7 +143,7 @@ body {
 .join-section {
   text-align: center; 
   padding: 5rem 2rem; 
-  background: linear-gradient(135deg,var(--color-primary),var(--color-secondary)); 
+  background: var(--gradient-bg); 
   color: var(--color-white);
 }
 

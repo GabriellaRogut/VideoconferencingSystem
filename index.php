@@ -32,9 +32,15 @@ include_once("includes/connection.php");
             <a href="#testimonials">Отзиви</a>
             <a href="#join">Присъединете се</a>
 
-            <!-- if logged in ?? -->
-            <a href="meetings.php">Срещи</a>
-            <a href="account.php">Акаунт</a> 
+            <!-- if logged in -->
+            <?php
+                if (isset($_SESSION['user_id'])) {
+            ?>
+                    <a href="meetings.php">Срещи</a>
+                    <a href="account.php">Акаунт</a> 
+            <?php 
+                }
+            ?>
         </nav>
     </header>
 
@@ -70,12 +76,14 @@ include_once("includes/connection.php");
         </div>
     </section>
 
+    <!-- DEMO SECTION -->
     <section class="demo" id="demo">
         <video controls autoplay muted loop>
             <source src="https://filesamples.com/samples/video/mp4/sample_1280x720.mp4" type="video/mp4">
         </video>
     </section>
 
+    <!-- TESTIMONIALS SECTION -->
     <section class="testimonials" id="testimonials">
         <h2>Какво казват потребителите ни</h2>
         <div class="testimonial-card">
@@ -89,6 +97,7 @@ include_once("includes/connection.php");
         </div>
     </section>
 
+    <!-- JOIN SECTION -->
     <section class="join-section" id="join">
         <h2>Готови ли сте да издигнете видеоконференциите си на следващо ниво?</h2>
         <button class="open-modal">Присъединете се</button>
@@ -98,7 +107,7 @@ include_once("includes/connection.php");
         © 2025 SignConnect. Всички права запазени.
     </footer>
 
-    <!-- Modal -->
+    <!-- LOG IN / SIGN UP MODAL -->
     <div class="modal-overlay<?php if ( isset( $_SESSION['errors_login']  ) || isset( $_SESSION['errors_signup'] ) ) echo " active" ?>" id="modal">
         <div class="modal">
             <span class="close" id="closeModal">&times;</span>
@@ -107,7 +116,7 @@ include_once("includes/connection.php");
                 <button id="loginTab" class="<?php if( isset( $_SESSION['errors_login'] ) ) echo " active-tab"  ?>">Вход</button>
             </div>
 
-            <!-- Sign Up Form -->
+            <!-- SIGN UP FORM -->
             <form class="modal-form <?php if( isset( $_SESSION['errors_signup'] ) ) echo " active-form"  ?>""  method="POST" id="signupForm" action="assets/action-files/signup.php">
                 <input type="text" name="username" placeholder="Потребителско име" required>
                 <input type="email" name="email" placeholder="Имейл" required>
@@ -130,7 +139,9 @@ include_once("includes/connection.php");
                 ?>
             </form>
 
-            <!-- Login Form -->
+
+
+            <!-- LOG IN FORM -->
             <form class="modal-form<?php if( isset( $_SESSION['errors_login'] ) ) echo " active-form"  ?>" method="POST" id="loginForm" action="assets/action-files/login.php">
                 <input type="email" name="email" placeholder="Имейл" required>
                 <input type="password" name="password" placeholder="Парола" required>
@@ -175,7 +186,7 @@ include_once("includes/connection.php");
         const switchToLogin = document.getElementById('switchToLogin');
         const switchToSignup = document.getElementById('switchToSignup');
 
-               // Modal open/close
+        // Modal open/close
         const modal = document.getElementById('modal');
         document.querySelectorAll('.open-modal').forEach(btn=>{
             btn.addEventListener('click',()=> { 

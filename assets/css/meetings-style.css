@@ -4,7 +4,7 @@
     flex-direction: column;
     padding: 30px 40px;
     gap: 20px;
-    background: #f7f9fc; /* subtle background for contrast */
+    background: var(--meetings-page-bg);
 }
 
 /* --- TOP CARD --- */
@@ -12,7 +12,7 @@
     display: flex;
     flex-direction: column;
     gap: 25px;
-    background: linear-gradient(145deg,#f0f4ff,#d9e2ff);
+    background: linear-gradient(145deg,var(--color-no-meetings-bg), var(--color-no-meetings-text));
     border-radius: 25px;
     padding: 30px 40px;
     box-shadow: 0 12px 30px rgba(0,0,0,0.1), 0 6px 12px rgba(0,0,0,0.06);
@@ -76,7 +76,7 @@
     outline: none;
     transition: all 0.25s ease;
     box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
-    background: #fff;
+    background: var(--color-white);
 }
 
 .enter-meeting input:focus {
@@ -87,7 +87,7 @@
 .enter-meeting button {
     padding: 14px 22px;
     background: linear-gradient(135deg,#5094db,#1262b8);
-    color: #fff;
+    color: var(--color-white);
     font-weight: 700;
     border-radius: 14px;
     border: none;
@@ -113,7 +113,7 @@
     align-items: center;
     gap: 12px;
     background: linear-gradient(135deg,#4f7ddb,#1b3f91);
-    color: #fff;
+    color: var(--color-white);
     font-weight: 700;
     font-size: 16px;
     padding: 16px 30px;
@@ -139,13 +139,13 @@
     justify-content: center;
     align-items: center;
     height: 300px;
-    background: #f0f4ff;
+    background: var(--color-no-meetings-bg);
     border-radius: 20px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     text-align: center;
     padding: 30px 20px;
     font-size: 19px;
-    color: #4f6fa4;
+    color: var(--color-no-meetings-text);
     font-weight: 600;
     margin: 20px 0;
 }
