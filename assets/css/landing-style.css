@@ -192,15 +192,54 @@ body {
 
 .modal {
   background: var(--color-white); 
-  padding: 2rem; 
+  padding: 1.5rem;
   border-radius: 1rem; 
-  width: 90%;
+  width: 90%; 
   max-width: 400px;
   text-align: center; 
   position: relative; 
-  transform: scale(0.8); 
-  transition: transform 0.3s ease;
+  transform: scale(1);
+  box-sizing: border-box;
 }
+
+@media (max-width: 480px) {
+  .modal {
+    width: 95%;
+    padding: 1rem;
+  }
+
+  .modal h3 {
+    font-size: 1.25rem;
+  }
+
+  .modal-tabs button {
+    font-size: 0.9rem;
+    padding: 0.6rem 0;
+  }
+
+  .toggle-text {
+    font-size: 0.85rem;
+  }
+
+  .close {
+    right: 15px;
+    top: 10px;
+  }
+  .join-section {
+    padding: 3rem 1rem;
+  }
+
+  .join-section h2 {
+    font-size: 1.4rem; 
+    line-height: 1.4; 
+  }
+
+  .join-section button {
+    padding: 0.8rem 1.5rem; 
+    font-size: 1rem;
+  }
+}
+
 
 .modal-overlay.active .modal {
   transform: scale(1);
@@ -213,6 +252,8 @@ body {
 }
 
 .modal input {
+  color: var(--input-color-txt) !important;
+  background-color: var(--color-bg);
   width: 90%; 
   padding: 0.8rem; 
   margin-bottom: 1rem; 

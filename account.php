@@ -53,7 +53,8 @@ if (!$user) {
 
     <!-- LEFT SIDE: Profile -->
     <div class="profile-card acc-card">
-        <img src="assets/images/default-pfp.png" class="profile-photo">
+        <img src="assets/images/<?= htmlspecialchars($user['profile_photo'] ?: 'default-pfp.png') ?>" class="profile-photo">
+
 
         <h2><?= htmlspecialchars($user['username']) ?></h2>
         <p class="email"><?= htmlspecialchars($user['email']) ?></p>
@@ -83,6 +84,8 @@ if (!$user) {
                 <input type="checkbox" id="themeSwitch">
                 <label for="themeSwitch" class="toggle-label">
                     <span class="toggle-ball"></span>
+                    <i class="fa-solid fa-sun icon sun"></i>
+                    <i class="fa-solid fa-moon icon moon"></i>
                 </label>
             </div>
         </div>
@@ -108,9 +111,14 @@ if (!$user) {
         </form>
 
         <hr>
-        <div class="danger-container">
-            <button class="danger-btn open-delete-modal">Изтриване на акаунта</button>
+        <div class="danger-container view-buttons">
+            <form method="POST" action="assets/action-files/logout.php" class="logout-form">
+                <button type="submit" class="danger-btn logout-btn">Изход</button>
+            </form>
+
+            <button class="danger-btn delete-btn open-delete-modal">Изтриване на акаунта</button>
         </div>
+
 
     </div>
 
@@ -121,7 +129,17 @@ if (!$user) {
 
         <h2 class="section-title">Настройки на Акаунта</h2>
 
-        <form class="settings-form" method="POST" action="assets/action-files/edit-account.php">
+        <form class="settings-form" method="POST" action="assets/action-files/edit-account.php" enctype="multipart/form-data">
+
+            <div class="field">
+                <label>Профилна снимка:</label>
+                <input type="file" name="profile_photo" accept="image/*">
+                <?php if($user['profile_photo'] && $user['profile_photo'] != 'default-pfp.png'){ ?>
+                    <img src="assets/images/<?= htmlspecialchars($user['profile_photo']) ?>" class="edit-photo-preview">
+                <?php } ?>
+            </div>
+
+
             <div class="field">
                 <label>Име:</label>
                 <input type="text" name="username" value="<?= $user['username'] ?>">
@@ -164,7 +182,15 @@ if (!$user) {
 
         <hr style="margin: 20px;">
 
-        <button class="danger-btn danger-btn-edit open-delete-modal">Изтриване на акаунта</button>
+
+        <div class="danger-container edit-buttons">
+            <form method="POST" action="assets/action-files/logout.php" class="logout-form">
+                <button type="submit" class="danger-btn logout-btn">Изход</button>
+            </form>
+
+            <button class="danger-btn delete-btn open-delete-modal">Изтриване на акаунта</button>
+        </div>
+
     </div>
 
 </section>
@@ -244,6 +270,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </script>
 
+
+<!-- change theme js -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const themeSwitch = document.getElementById("themeSwitch");

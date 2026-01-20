@@ -20,8 +20,6 @@ include_once("includes/connection.php");
 <?php
 //print_r($_SESSION);
 ?>
-
-
     <header class="main-header">
         <div class="logo">SignConnect</div>
         <div class="menu-toggle">&#9776;</div>
@@ -52,28 +50,45 @@ include_once("includes/connection.php");
 
     <section class="features" id="features">
         <div class="feature-card">
-            <img src="https://img.icons8.com/?size=100&id=16557&format=png&color=2D5BE3" />
+            <img class="theme-icon" data-icon="16557" data-type="png" />
             <h3>Жестове → Субтитри</h3>
             <p>Автоматичен превод на жестомимичен език в четим текст в реално време.</p>
         </div>
 
         <div class="feature-card">
-            <img src="https://img.icons8.com/?size=100&id=10482&format=png&color=2D5BE3" />
+            <img class="theme-icon" data-icon="10482" data-type="png" />
             <h3>Глас → Субтитри</h3>
             <p>Превръща говор в текст за по-ясни и достъпни разговори.</p>
         </div>
 
         <div class="feature-card">
-            <img src="https://img.icons8.com/ios-filled/50/2D5BE3/video-call.png"/>
+            <img class="theme-icon" data-icon="video-call" data-type="ios-filled" />
             <h3>Кристално Ясно Видео</h3>
-            <p>Оптимизирано качество на видеото за точно улавяне на всеки жест и движение.</p>
+            <p>Оптимизирано качество на видеото за точно улавяне на всеки жест.</p>
         </div>
 
         <div class="feature-card">
-            <img src="https://img.icons8.com/ios-filled/50/2D5BE3/lock.png"/>
+            <img class="theme-icon" data-icon="lock" data-type="ios-filled" />
             <h3>Сигурност & Поверителност</h3>
             <p>Криптиране от край до край гарантира, че разговорите остават конфиденциални.</p>
         </div>
+
+        <script>
+            const isDark = localStorage.getItem("theme") === "dark";
+            const color = isDark ? "8ea0d2" : "2D5BE3";
+
+            document.querySelectorAll(".theme-icon").forEach(icon => {
+                const type = icon.dataset.type;
+                const name = icon.dataset.icon;
+
+                if (type === "png") {
+                    icon.src = `https://img.icons8.com/?size=100&id=${name}&format=png&color=${color}`;
+                } else {
+                    icon.src = `https://img.icons8.com/ios-filled/50/${color}/${name}.png`;
+                }
+            });
+        </script>
+
     </section>
 
     <!-- DEMO SECTION -->

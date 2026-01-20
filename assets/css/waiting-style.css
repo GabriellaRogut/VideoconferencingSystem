@@ -37,17 +37,17 @@
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 6px;
-    color: #2c3e70;
+    color: var(--waiting-header-txt);
 }
 
 .waiting-subtitle {
     font-size: 0.95rem;
-    color: #6c6c6c;
+    color: var(--waiting-subtitle);
 }
 
 /* CODE BOX */
 .code-box {
-    background: #f9fbff;
+    background: var(--color-white);
     border: 1px solid #e5ebf5;
     border-radius: 16px;
     padding: 20px;
@@ -75,7 +75,7 @@
 /* COPY BUTTON */
 .copy-btn {
     background: linear-gradient(135deg,#5094db,#1262b8);
-    color: var(--color-white);
+    color: var(--white);
     border: none;
     border-radius: 14px;
     padding: 12px 20px;
@@ -110,7 +110,7 @@
     bottom: 12px;
     left: 12px;
     background: rgba(0,0,0,0.6);
-    color: var(--color-white);
+    color: var(--white);
     padding: 4px 10px;
     border-radius: 8px;
     font-size: 0.8rem;

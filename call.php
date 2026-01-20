@@ -9,9 +9,18 @@ if (!isset($_SESSION['user_id'])) {
 
 $userID = $_SESSION['user_id'];
 
+$stmt = $connection->prepare("SELECT username, profile_photo FROM users WHERE id = ?");
+$stmt->execute([$userID]);
+$localUser = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Fallback to default if no photo
+$localPhoto = $localUser['profile_photo'] ?: 'default-pfp.png';
+$local_username = $localUser['username'];
+
+
 // Get meeting code from URL
 // $meeting_code = $_GET['code'] ?? null;
-$meeting_code = "TEST1234";
+$meeting_code = "TEST123";
 
 
 if (!$meeting_code) {
@@ -44,7 +53,7 @@ $stmt->execute([$meeting['id']]);
 $participants = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
 // Add host at the beginning of the participants list
-// array_unshift($participants, $meeting['host_name']);
+array_unshift($participants, $meeting['host_name']);
 
 // Local user name
 $local_username = $_SESSION['username'];
@@ -68,11 +77,12 @@ $local_username = $_SESSION['username'];
 
   <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="logo">
-      <img src="assets/images/favicon.ico" alt="SignConnect">
+    <div class="logo text-logo">
+      <span class="sign">Sign</span><span class="connect">Connect</span>
     </div>
 
-    <img class="profile-picture" src="assets/images/default-pfp.png" alt="user">
+
+    <img class="profile-picture" src="assets/images/<?= htmlspecialchars($localPhoto) ?>" alt="<?= htmlspecialchars($local_username) ?>">
   </aside>
 
   <!-- Main Content -->
@@ -137,12 +147,44 @@ $local_username = $_SESSION['username'];
         <i class="fa-solid fa-user-plus participants-options"></i>
       </div>
       <ul>
-        <?php foreach ($participants as $index => $username): ?>
+        <?php foreach ($participants as $index => $username){ ?>
           <li>
-            <img class="avatar" src="assets/images/default-pfp.png">
-            <?= htmlspecialchars($username) ?><?= $index === 0 ? " (Host)" : "" ?>
-          </li>
-        <?php endforeach; ?>
+            <?php 
+              // Fetch participants with their profile photos (excluding host)
+              $stmt = $connection->prepare("
+                  SELECT u.username, u.profile_photo, p.role
+                  FROM participants p
+                  JOIN users u ON p.user_id = u.id
+                  WHERE p.meeting_id = ? AND p.role != 'host'
+                  ORDER BY p.joined_at ASC
+              ");
+              $stmt->execute([$meeting['id']]);
+              $participantRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+              // Add host at the beginning
+              $participants = [];
+              $participants[] = [
+                  'username' => $meeting['host_name'],
+                  'profile_photo' => $localPhoto,
+                  'role' => 'host'
+              ];
+
+              foreach ($participantRows as $row) {
+                  $participants[] = [
+                      'username' => $row['username'],
+                      'profile_photo' => $row['profile_photo'] ?: 'default-pfp.png',
+                      'role' => $row['role']
+                  ];
+              }
+            ?>
+            <?php foreach ($participants as $index => $participant){ ?>
+
+            <li>
+              <img class="avatar" src="assets/images/<?= htmlspecialchars($participant['profile_photo']) ?>" alt="<?= htmlspecialchars($participant['username']) ?>">
+              <?= htmlspecialchars($participant['username']) ?><?= $participant['role'] === 'host' ? " (Host)" : "" ?>
+            </li>
+          <?php } ?>
+        <?php } ?>
       </ul>
     </section>
 

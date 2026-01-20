@@ -21,7 +21,7 @@
     overflow: hidden;
 }
 
-/* subtle animated gradient glow on top card */
+/* circling glow animation */
 .top-meetings-card::before {
     content: '';
     position: absolute;
@@ -29,7 +29,7 @@
     height: 200%;
     top: -50%;
     left: -50%;
-    background: radial-gradient(circle at 30% 30%, rgba(80,148,219,0.2), transparent 70%);
+    background: radial-gradient(circle at 30% 30%, #5094db33, transparent 70%);
     animation: glow 6s linear infinite;
     z-index: 0;
 }
@@ -43,7 +43,7 @@
 .top-meetings-card h2 {
     font-size: 26px;
     font-weight: 700;
-    color: #2c3e70;
+    color: var(--white);
     letter-spacing: 0.5px;
     position: relative;
     z-index: 1;
@@ -59,7 +59,7 @@
     z-index: 1;
 }
 
-/* --- ENTER MEETING LEFT --- */
+/* --- ENTER MEETING - LEFT --- */
 .enter-meeting {
     flex: 1;
     display: flex;
@@ -81,13 +81,13 @@
 
 .enter-meeting input:focus {
     border-color: #5094db;
-    box-shadow: 0 0 10px rgba(80,148,219,0.3) inset;
+    box-shadow: 0 0 10px #5094db4d inset;
 }
 
 .enter-meeting button {
     padding: 14px 22px;
     background: linear-gradient(135deg,#5094db,#1262b8);
-    color: var(--color-white);
+    color: var(--white);
     font-weight: 700;
     border-radius: 14px;
     border: none;
@@ -113,7 +113,7 @@
     align-items: center;
     gap: 12px;
     background: linear-gradient(135deg,#4f7ddb,#1b3f91);
-    color: var(--color-white);
+    color: var(--white);
     font-weight: 700;
     font-size: 16px;
     padding: 16px 30px;
@@ -151,8 +151,95 @@
 }
 
 
+/* --- MEETINGS LIST --- */
+.meetings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-/* --- RESPONSIVE UPDATES --- */
+/* --- MEETING CARD --- */
+.meeting-card {
+    background: var(--color-white);
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: 0 8px 18px #00000014;
+    display: flex;             
+    flex-direction: row;        
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    flex-wrap: wrap;             
+}
+
+.meeting-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 28px #00000024;
+}
+
+
+.meeting-card .left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1 1 60%; 
+}
+
+
+.meeting-card .right {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    gap: 6px;
+    white-space: nowrap; 
+}
+
+.meeting-card .right .datetime,
+.meeting-card .right .duration {
+    font-size: 13px;
+}
+
+/* --- PARTICIPANTS LIST --- */
+.participants-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 9px;
+}
+
+.participants-list .participant {
+    background: #e9f1fde9; 
+    color: var(--color-no-meetings-text);  
+    padding: 5px 12px;
+    border-radius: 22px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.participants-list .participant img {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-white);
+}
+
+.title {
+    padding: 5px;
+    font-size: 20px;
+    color: var(--header-txt-call);
+    font-weight: lighter;
+}
+
+.code{
+    font-size: 22px;
+    color: var(--meeting-header-card-txt);
+    font-weight: 500;
+}
 
 /* Tablets & small screens */
 @media(max-width: 768px){
@@ -226,6 +313,10 @@
     }
 
     .meeting-info .title {
+        font-size: 14px;
+    }
+
+    .meeting-info .code {
         font-size: 16px;
     }
 
@@ -249,7 +340,7 @@
     }
 }
 
-/* Extra small devices (very small screens, e.g., old phones) */
+/* Extra small devices */
 @media(max-width: 360px){
     .enter-meeting input {
         font-size: 11px;
@@ -271,6 +362,10 @@
     }
 
     .meeting-info .title {
+        font-size: 12px;
+    }
+
+    .meeting-info .code {
         font-size: 15px;
     }
 
@@ -288,3 +383,5 @@
         height: 24px;
     }
 }
+
+

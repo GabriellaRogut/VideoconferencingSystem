@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $userID = $_SESSION['user_id'];
 
-// Fetch all meetings where user is host or participant
+// Fetch all meetings where user takes part
 $sql = "
     SELECT m.id, m.code, m.status, m.start_time, m.duration_minutes, m.host_id, u.username AS host_name
     FROM meetings m
@@ -24,7 +24,8 @@ $stmt = $connection->prepare($sql);
 $stmt->execute([$userID, $userID]);
 $meetings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch participants usernames
+
+// Fetch participants
 $meeting_participants = [];
 
 if ($meetings) {
@@ -32,18 +33,40 @@ if ($meetings) {
         $meeting_id = $meeting['id'];
 
         $stmt = $connection->prepare("
-            SELECT u.username
+            SELECT u.username, u.profile_photo
             FROM participants p
             JOIN users u ON p.user_id = u.id
             WHERE p.meeting_id = ?
             ORDER BY p.joined_at ASC
         ");
         $stmt->execute([$meeting_id]);
-        $participants = $stmt->fetchAll(PDO::FETCH_COLUMN); // get only usernames
+        $participants = $stmt->fetchAll(PDO::FETCH_ASSOC); // fetch username + photo
 
-        $meeting_participants[$meeting_id] = $participants;
+        // Add host at the beginning
+        $host_stmt = $connection->prepare("SELECT profile_photo FROM users WHERE id = ?");
+        $host_stmt->execute([$meeting['host_id']]);
+        $host = $host_stmt->fetch(PDO::FETCH_ASSOC);
+
+        $allParticipants = [];
+
+        // Add host first
+        $allParticipants[] = [
+            'username' => $meeting['host_name'],
+            'profile_photo' => $host['profile_photo'] ?: 'default-pfp.png'
+        ];
+
+        // Add other participants
+        foreach ($participants as $p) {
+            $allParticipants[] = [
+                'username' => $p['username'],
+                'profile_photo' => $p['profile_photo'] ?: 'default-pfp.png'
+            ];
+        }
+
+        $meeting_participants[$meeting_id] = $allParticipants;
     }
 }
+
 ?>
 
 
@@ -74,13 +97,13 @@ if ($meetings) {
         <div class="top-meetings-card">
             <h2>Вашите срещи</h2>
             <div class="meeting-actions">
-                <!-- ENTER MEETING LEFT -->
+                <!-- ENTER MEETING -->
                 <div class="enter-meeting">
                     <input type="text" id="meetingCodeInput" placeholder="Въведете код за присъединяване">
                     <button onclick="joinMeeting()">Влез</button>
                 </div>
 
-                <!-- CREATE NEW MEETING RIGHT -->
+                <!-- CREATE NEW MEETING -->
                 <div class="create-meeting">
                     <button class="new-meeting-btn">
                         <span>Стартирай нова среща</span>
@@ -97,31 +120,43 @@ if ($meetings) {
             <?php if ($meetings){ ?>
                 <?php foreach($meetings as $meeting){ ?>
                     <div class="meeting-card">
-                        <div class="meeting-info">
-                            <span class="title"><?= htmlspecialchars($meeting['code']) ?></span>
-                            <span class="datetime"> <?= date('d.m.Y · H:i', strtotime($meeting['start_time'])) ?>
-                                · <?= $meeting['duration_minutes'] ?> мин</span>
-                        </div>
-                        <div class="participants-list">
-                            <?php
-                                $participants = $meeting_participants[$meeting['id']];
-                                foreach ($participants as $participant_name):
-                            ?>
+                        
+                        <!-- LEFT: CODE + PARTICIPANTS -->
+                        <div class="left">
+                            <div class="meeting-info">
+                                <span class="title">Код:</span>
+                                <span class="code"><?= htmlspecialchars($meeting['code']) ?></span>
+                            </div>
+                            <div class="participants-list">
+                                <?php
+                                    $participants = $meeting_participants[$meeting['id']];
+                                    foreach ($participants as $participant){
+                                ?>
                                 <div class="participant">
-                                    <img src="assets/images/default-pfp.png" alt="user">
-                                    <span class="participant-name"><?= htmlspecialchars($participant_name) ?></span>
+                                    <img src="assets/images/<?= htmlspecialchars($participant['profile_photo']) ?>" alt="<?= htmlspecialchars($participant['username']) ?>">
+                                    <span class="participant-name"><?= htmlspecialchars($participant['username']) ?><?= $participant['username'] === $meeting['host_name'] ? " (Host)" : "" ?></span>
                                 </div>
-                            <?php endforeach; ?>
+                                <?php 
+                                    } 
+                                ?>
+                            </div>
                         </div>
+
+                        <!-- RIGHT: DATE / TIME / DURATION -->
+                        <div class="right">
+                            <span class="datetime"><?= date('d.m.Y · H:i', strtotime($meeting['start_time'])) ?></span>
+                            <span class="duration"><?= $meeting['duration_minutes'] ?> мин</span>
+                        </div>
+
                     </div>
                 <?php } ?>
-            <?php } else {?>
+            <?php } else { ?>
                 <div class="no-meetings">
                     <p>Няма проведени видеоконференции за показване.</p>
                 </div>
-
             <?php } ?>
-        </div>
+            </div>
+
     </main>
 
     <footer>

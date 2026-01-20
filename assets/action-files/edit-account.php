@@ -24,7 +24,7 @@ if (isset($_POST['update_account'])) {
 
     // current password hash
     $stmt = $connection->prepare("
-        SELECT password_hash 
+        SELECT password_hash, profile_photo 
         FROM users 
         WHERE id = ?
     ");
@@ -34,30 +34,68 @@ if (isset($_POST['update_account'])) {
     // Check if changing password
     if ($new_password) {
         if (!$current_password) {
-            $_SESSION['errors_update'] [] = "Въведете текуща парола.";
+            $_SESSION['errors_update'][] = "Въведете текуща парола.";
         } elseif (!password_verify($current_password, $user['password_hash'])) {
-            $_SESSION['errors_update'] [] = "Текущата парола е грешна.";
+            $_SESSION['errors_update'][] = "Текущата парола е грешна.";
         } elseif ($new_password !== $confirm_password) {
-            $_SESSION['errors_update'] [] = "Паролата не съвпада.";
+            $_SESSION['errors_update'][] = "Паролата не съвпада.";
         } else {
             $new_password_hash = password_hash($new_password, PASSWORD_DEFAULT);
         }
     }
 
-    if (!$_SESSION['errors_update'] ) {
-        // Update username and email
-        $sql = "
-            UPDATE users 
-            SET username = ?, email = ?" . ($new_password ? ", password_hash = ?" : "") . " 
-            WHERE id = ?
-        ";
-        $stmt = $connection->prepare($sql);
+    // -------------------------
+    // Handle profile photo upload
+    // -------------------------
+    if (isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES['profile_photo']['tmp_name'];
+        $fileName = $_FILES['profile_photo']['name'];
+        $fileSize = $_FILES['profile_photo']['size'];
+        $fileType = $_FILES['profile_photo']['type'];
+        $fileNameCmps = explode(".", $fileName);
+        $fileExtension = strtolower(end($fileNameCmps));
+
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+        if (in_array($fileExtension, $allowedExtensions)) {
+            // rename file to avoid collisions
+            $newFileName = $userID . '_' . time() . '.' . $fileExtension;
+            $uploadFileDir = '../../assets/images/';
+            $dest_path = $uploadFileDir . $newFileName;
+
+            if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                $profile_photo_to_save = $newFileName;
+            } else {
+                $_SESSION['errors_update'][] = "Грешка при качване на снимката.";
+            }
+        } else {
+            $_SESSION['errors_update'][] = "Невалиден формат на снимката. Разрешени: jpg, png, gif.";
+        }
+    }
+
+    // -------------------------
+    // If no errors, update database
+    // -------------------------
+    if (!$_SESSION['errors_update']) {
+        $sql = "UPDATE users SET username = ?, email = ?";
+
+        $params = [$username, $email];
 
         if ($new_password) {
-            $stmt->execute([$username, $email, $new_password_hash, $userID]);
-        } else {
-            $stmt->execute([$username, $email, $userID]);
+            $sql .= ", password_hash = ?";
+            $params[] = $new_password_hash;
         }
+
+        if (isset($profile_photo_to_save)) {
+            $sql .= ", profile_photo = ?";
+            $params[] = $profile_photo_to_save;
+        }
+
+        $sql .= " WHERE id = ?";
+        $params[] = $userID;
+
+        $stmt = $connection->prepare($sql);
+        $stmt->execute($params);
 
         // Update session
         $_SESSION['username'] = $username;
@@ -65,7 +103,7 @@ if (isset($_POST['update_account'])) {
         header("Location: ../../account.php?success=1");
         exit;
     } else {
-        $_SESSION['edit_errors'] = $_SESSION['errors_update'] ;
+        $_SESSION['edit_errors'] = $_SESSION['errors_update'];
         header("Location: ../../account.php");
         exit;
     }

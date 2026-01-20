@@ -1,8 +1,11 @@
 :root {
+    --white: #FFFFFF;
+
     --color-primary: #2D5BE3;
     --color-primary-light: #3E6CF0;
     --color-secondary: #00BFA6;
     --color-secondary-light: #33D4B2;
+  
 
     --color-bg: #F3F5F9;
     --color-white: #FFFFFF;
@@ -17,22 +20,36 @@
 
     --color-no-meetings-bg: #f0f4ff;
     --color-no-meetings-text: #4f6fa4;
+    --meeting-header-card-txt: #2c3e70;
 
     --meetings-page-bg: #f7f9fc;
 
     --gradient-bg: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
 
     --input-border: 1px solid #E5E7EB;
-    --input-color-txt: var(--color-white);
+    --input-color-txt: var(--color-text);
     --controls-bg: var(--color-white);
+
+    --waiting-header-txt: #2c3e70;
+    --waiting-subtitle: #6c6c6c;
+
+    --header-txt-call: #5480ab;
+    --header-txt-bgr-call: #e9f1fde9;
+    --msg-local-user: #dff3e3;
+
+    --msgs-bgr: #F3F5F9;
+
+    --toggle-ball: var(--color-bg)
 }
 
 /* DARK MODE  */
 :root.dark-mode {
-    --color-primary: #2D5BE3;          
-    --color-primary-light: #3E6CF0;
-    --color-secondary: #00BFA6;       
-    --color-secondary-light: #33D4B2;
+    --white: #FFFFFF;
+
+    --color-primary: #bfcdf2;          
+    --color-primary-light: #8ea0d2;
+    --color-secondary: #0b3930;       
+    --color-secondary-light: #9fc6bd;
 
     --color-bg: #121212;             
     --color-white: #202020;            
@@ -45,16 +62,28 @@
     --shadow-light: 0 4px 14px rgba(0, 0, 0, 0.6); 
     --shadow-heavy: 0 10px 35px rgba(0, 0, 0, 0.8);
 
-    --color-no-meetings-bg: #1E1E1E;  
-    --color-no-meetings-text: #A0A0A0; 
+    --color-no-meetings-bg: #c7d4dbc1;  
+    --color-no-meetings-text: #3c3c3c; 
+    --meeting-header-card-txt: #e0e0e0;
 
     --meetings-page-bg: #2f2f2f;
 
-    --gradient-bg: linear-gradient(135deg, #1e3a8a, #008b75);
+    --gradient-bg: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
 
     --input-border: none;
     --input-color-txt: #FFFFFF; 
     --controls-bg: #ffffffba;
+
+    --waiting-header-txt: #e6e6e6;
+    --waiting-subtitle: #a8afb4;
+
+    --header-txt-call: #9bb0c5;
+    --header-txt-bgr-call: #0f0f0fe9;
+    --msg-local-user: #535769;
+
+    --msgs-bgr: #2d2f2d;
+
+    --toggle-ball: #2a2a2a;
 }
 
 
@@ -171,6 +200,6 @@ footer {
 
 /* ERRORS */
 .error {
-    color: rgb(161, 25, 25) !important;
+    color: #a11919 !important;
     font-size: 13px;
 }
