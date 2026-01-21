@@ -5,14 +5,14 @@ if (isset($_POST['login'])) {
     $email_input = trim($_POST['email']);
     $password_input = $_POST['password'];
 
-    $_SESSION['errors_login'] = [];
+    $errors_login = [];
 
     if (!$email_input || !$password_input) {
         $_SESSION['errors_login'][] = "Попълнете всички полета!";
     }
     
 
-    if ( !$_SESSION['errors_login'] ) {
+    if ( !$errors_login ) {
         $stmt = $connection->prepare("
             SELECT * 
             FROM users 
@@ -27,12 +27,15 @@ if (isset($_POST['login'])) {
             echo "<script>document.location.href='../../account.php';</script>";
             exit;
         } else {
-            $_SESSION['errors_login'][] = "Невалиден вход!";
+            $errors_login[] = "Невалиден вход!";
         }
     }
  
 
 }
+
+if( $errors_login )
+    $_SESSION['errors_login'] = $errors_login;
 
 echo "<script>document.location.href='../../index.php';</script>";
 exit;

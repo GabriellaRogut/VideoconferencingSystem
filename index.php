@@ -168,6 +168,7 @@ include_once("includes/connection.php");
     </footer>
 
     <!-- LOG IN / SIGN UP MODAL -->
+
     <div class="modal-overlay<?php if ( isset( $_SESSION['errors_login']  ) || isset( $_SESSION['errors_signup'] ) ) echo " active" ?>" id="modal">
         <div class="modal">
             <span class="close" id="closeModal">&times;</span>

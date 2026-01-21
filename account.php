@@ -112,10 +112,7 @@ if (!$user) {
 
         <hr>
         <div class="danger-container view-buttons">
-            <form method="POST" action="assets/action-files/logout.php" class="logout-form">
-                <button type="submit" class="danger-btn logout-btn">Изход</button>
-            </form>
-
+            <a href="assets/action-files/logout.php" type="submit" class="danger-btn logout-btn">Изход</a>
             <button class="danger-btn delete-btn open-delete-modal">Изтриване на акаунта</button>
         </div>
 
@@ -249,7 +246,7 @@ if (!$user) {
 
         document.querySelectorAll(".open-delete-modal").forEach(btn => {
             btn.addEventListener("click", () => {
-                deleteModal.style.display = "block";
+                deleteModal.style.display = "flex";
             });
         });
 
