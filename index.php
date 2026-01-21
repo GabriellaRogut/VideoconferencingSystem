@@ -1,6 +1,29 @@
 <?php
 include_once("includes/connection.php");
 ?>
+
+<?php
+// Log out message
+    if (isset($_SESSION['logout_success'])){ ?>
+        <div id="logoutMessage" class="logout-message">
+            <?= htmlspecialchars($_SESSION['logout_success']) ?>
+        </div>
+        <?php unset($_SESSION['logout_success']); ?>
+    <?php } 
+?>
+
+<?php
+// Account deleted message
+    if (isset($_SESSION['account_deleted'])){ ?>
+        <div id="accountDeletedMessage" class="logout-message">
+            <?= htmlspecialchars($_SESSION['account_deleted']) ?>
+        </div>
+        <?php unset($_SESSION['account_deleted']); ?>
+    <?php } 
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -14,6 +37,28 @@ include_once("includes/connection.php");
     <link rel="stylesheet" href="assets/css/landing-style.css">
 </head>
 
+
+
+<script>
+    // log out / delete acct mssgs
+    document.addEventListener("DOMContentLoaded", () => {
+        const messages = ["logoutMessage", "accountDeletedMessage"];
+
+        messages.forEach(id => {
+            const msg = document.getElementById(id);
+            if (msg) {
+                setTimeout(() => {
+                    msg.style.opacity = '0';
+                    msg.style.transform = 'translateY(-20px)';
+                    setTimeout(() => msg.remove(), 1000);
+                }, 1200);
+            }
+        });
+    });
+</script>
+
+
+</script>
 
 <body>
 

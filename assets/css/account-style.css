@@ -118,8 +118,8 @@ body {
 }
 
 .field input {
+    color: var(--color-text);
     background: var(--color-bg);
-    color: var(--white);
     width: 100%;
     padding: 12px 14px;
     border-radius: 10px;

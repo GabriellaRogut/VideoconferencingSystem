@@ -11,7 +11,7 @@ $userID = $_SESSION['user_id'];
 
 // Fetch all meetings where user takes part
 $sql = "
-    SELECT DISTINCT m.id, m.code, m.status, m.start_time, m.duration_minutes
+    SELECT DISTINCT m.id, m.code, m.status, m.start_time, m.end_time, m.duration_minutes
     FROM meetings m
     LEFT JOIN participants p ON m.id = p.meeting_id
     WHERE m.host_id = ? OR p.user_id = ?
@@ -84,8 +84,8 @@ foreach ($meetings as $meeting) {
     </div>
 
     <div class="meetings-list">
-        <?php if ($meetings): ?>
-            <?php foreach ($meetings as $meeting): ?>
+        <?php if ($meetings){ ?>
+            <?php foreach ($meetings as $meeting){ ?>
                 <div class="meeting-card">
 
                     <div class="left">
@@ -95,7 +95,7 @@ foreach ($meetings as $meeting) {
                         </div>
 
                         <div class="participants-list">
-                            <?php foreach ($meeting_participants[$meeting['id']] as $p): ?>
+                            <?php foreach ($meeting_participants[$meeting['id']] as $p){ ?>
                                 <div class="participant">
                                     <img src="assets/images/<?= htmlspecialchars($p['profile_photo'] ?: 'default-pfp.png') ?>">
                                     <span class="participant-name">
@@ -103,7 +103,7 @@ foreach ($meetings as $meeting) {
                                         <?= $p['role'] === 'host' ? ' (Host)' : '' ?>
                                     </span>
                                 </div>
-                            <?php endforeach; ?>
+                            <?php } ?>
                         </div>
                     </div>
 
@@ -112,17 +112,33 @@ foreach ($meetings as $meeting) {
                             <?= date('d.m.Y · H:i', strtotime($meeting['start_time'])) ?>
                         </span>
                         <span class="duration">
-                            <?= $meeting['duration_minutes'] ?> мин
+                            <?php
+                                $start = new DateTime($meeting['start_time']);
+                                if (!empty($meeting['end_time'])) {
+                                    $end = new DateTime($meeting['end_time']);
+                                    $interval = $start->diff($end);
+                                    $hours = $interval->h;
+                                    $minutes = $interval->i;
+                                    if ($hours > 0) {
+                                        echo "{$hours} ч {$minutes} мин";
+                                    } else {
+                                        echo "{$minutes} мин";
+                                    }
+                                } else {
+                                    echo "ongoing";
+                                }
+                            ?>
                         </span>
+
                     </div>
 
                 </div>
-            <?php endforeach; ?>
-        <?php else: ?>
+            <?php } ?>
+        <?php } else { ?>
             <div class="no-meetings">
                 <p>Няма проведени видеоконференции за показване.</p>
             </div>
-        <?php endif; ?>
+        <?php } ?>
     </div>
 </main>
 

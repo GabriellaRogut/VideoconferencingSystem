@@ -21,10 +21,10 @@ function generateMeetingCode($length = 6) {
 
 $code = generateMeetingCode();
 
-// Insert meeting (duration hardcoded to 60 minutes)
+// Insert meeting without fixed duration
 $stmt = $connection->prepare("
-    INSERT INTO meetings (code, host_id, start_time, duration_minutes, status)
-    VALUES (?, ?, NOW(), 60, 'waiting')
+    INSERT INTO meetings (code, host_id, start_time, status)
+    VALUES (?, ?, NOW(), 'waiting')
 ");
 $stmt->execute([$code, $userID]);
 
@@ -40,3 +40,4 @@ $stmt->execute([$meeting_id, $userID]);
 // Redirect to waiting room
 header("Location: ../../waiting.php?code=$code");
 exit;
+?>

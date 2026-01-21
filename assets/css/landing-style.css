@@ -355,3 +355,20 @@ body {
     max-width: 90%;
   }
 }
+
+/* LOGOUT MSSG */
+.logout-message {
+    background-color: var(--color-bg);       
+    color: var(--color-text);               
+    border: 1px solid var(--color-primary);    
+    padding: 14px 22px;              
+    margin: 20px auto;                
+    max-width: 480px;                 
+    text-align: center;
+    border-radius: 12px;             
+    font-weight: 600;             
+    box-shadow: 0 4px 12px #00000014;  
+    opacity: 1;
+    transition: opacity 1s ease, transform 1s ease;
+    transform: translateY(0);     
+}
