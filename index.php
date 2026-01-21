@@ -31,6 +31,7 @@ include_once("includes/connection.php");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SignConnect — Видео Конференции за Всеки</title>
 
+
     <?php include("includes/links.php"); ?>
 
     <!-- Styles -->

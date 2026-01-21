@@ -11,3 +11,6 @@
 
 <!-- General scripts -->
 <script src="assets/js/main.js" defer></script>
+
+<!-- Favicon -->
+<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">

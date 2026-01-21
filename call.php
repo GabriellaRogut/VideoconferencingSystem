@@ -46,19 +46,19 @@ if (!$meeting) {
     die("Срещата не съществува.");
 }
 
-// Fetch participants (without host)
+// Fetch participants
 $stmt = $connection->prepare("
-    SELECT u.username, p.role
+    SELECT u.username, p.role, u.profile_photo
     FROM participants p
     JOIN users u ON p.user_id = u.id
-    WHERE p.meeting_id = ? AND p.role != 'host'
+    WHERE p.meeting_id = ?
     ORDER BY p.joined_at ASC
 ");
 $stmt->execute([$meeting['id']]);
-$participants = $stmt->fetchAll(PDO::FETCH_COLUMN);
+$participants = $stmt->fetchAll();
 
-// Add host at the beginning of the participants list
-array_unshift($participants, $meeting['host_name']);
+// echo '<pre>';
+// print_r($participants);
 
 // Local user name
 $local_username = $_SESSION['username'];
@@ -106,7 +106,10 @@ $local_username = $_SESSION['username'];
     <section class="video-area">
       <div class="video-grid">
 
+      <?php foreach ($participants as $p){ ?>
+
         <!-- LOCAL VIDEO -->
+        <?php if($p['role'] == "host"){ ?>
         <div class="video-card" id="localVideoCard">
           <video id="localVideo" autoplay muted playsinline></video>
           <div class="username-bubble">
@@ -115,16 +118,19 @@ $local_username = $_SESSION['username'];
           <div class="subtitle show">Това са примерни субтитри.</div> <!-- .show on active subtitles !!! -->
         </div>
 
+        <?php } else { ?>
+
         <!-- REMOTE VIDEO -->
-        <?php foreach ($participants as $username){ ?>
-          <?php if ($username !== $local_username){ ?>
+          <?php if ($p['username'] !== $local_username){ ?>
             <div class="video-card">
               <video autoplay playsinline></video>
               <div class="username-bubble">
-                <i class="fa-solid fa-user"></i> <?= htmlspecialchars($username) ?>
+                <i class="fa-solid fa-user"></i> <?= htmlspecialchars($p['username']) ?>
               </div>
             </div>
           <?php } ?>
+        <?php } ?>
+
         <?php } ?>
 
       </div>
@@ -152,44 +158,12 @@ $local_username = $_SESSION['username'];
         <i class="fa-solid fa-user-plus participants-options"></i>
       </div>
       <ul>
-        <?php foreach ($participants as $index => $username){ ?>
-          <li>
-            <?php 
-              // Fetch participants with their profile photos (excluding host)
-              $stmt = $connection->prepare("
-                  SELECT u.username, u.profile_photo, p.role
-                  FROM participants p
-                  JOIN users u ON p.user_id = u.id
-                  WHERE p.meeting_id = ? AND p.role != 'host'
-                  ORDER BY p.joined_at ASC
-              ");
-              $stmt->execute([$meeting['id']]);
-              $participantRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-              // Add host at the beginning
-              $participants = [];
-              $participants[] = [
-                  'username' => $meeting['host_name'],
-                  'profile_photo' => $localPhoto,
-                  'role' => 'host'
-              ];
-
-              foreach ($participantRows as $row) {
-                  $participants[] = [
-                      'username' => $row['username'],
-                      'profile_photo' => $row['profile_photo'] ?: 'default-pfp.png',
-                      'role' => $row['role']
-                  ];
-              }
-            ?>
-            <?php foreach ($participants as $index => $participant){ ?>
-
+        <?php foreach ($participants as $index => $participant){ ?>
             <li>
               <img class="avatar" src="assets/images/<?= htmlspecialchars($participant['profile_photo']) ?>" alt="<?= htmlspecialchars($participant['username']) ?>">
-              <?= htmlspecialchars($participant['username']) ?><?= $participant['role'] === 'host' ? " (Host)" : "" ?>
+              <?= htmlspecialchars($participant['username']) ?> <?php if($participant['role'] == "host"){ echo("(Host)");} ?>
             </li>
           <?php } ?>
-        <?php } ?>
       </ul>
     </section>
 

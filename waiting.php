@@ -79,28 +79,28 @@
 
 
     <script>
-        const sidebar = document.querySelector('.right-sidebar');
-        const toggleBtn = document.getElementById('sidebarToggle');
+        // const sidebar = document.querySelector('.right-sidebar');
+        // const toggleBtn = document.getElementById('sidebarToggle');
 
-        toggleBtn.addEventListener('click', () => {
-        sidebar.classList.toggle('hidden');
+        // toggleBtn.addEventListener('click', () => {
+        // sidebar.classList.toggle('hidden');
 
-        // Swap arrow icon
-        const icon = toggleBtn.querySelector('i');
-        if (sidebar.classList.contains('hidden')) {
-            icon.classList.remove('fa-angle-right');
-            icon.classList.add('fa-angle-left');
-        } else {
-            icon.classList.remove('fa-angle-left');
-            icon.classList.add('fa-angle-right');
-        }
-        });
+        // // Swap arrow icon
+        // const icon = toggleBtn.querySelector('i');
+        // if (sidebar.classList.contains('hidden')) {
+        //     icon.classList.remove('fa-angle-right');
+        //     icon.classList.add('fa-angle-left');
+        // } else {
+        //     icon.classList.remove('fa-angle-left');
+        //     icon.classList.add('fa-angle-right');
+        // }
+        // });
     </script>
 
 
     <script>
         const meetingCode = "<?= $code ?>";
-        const ws = new WebSocket("ws://localhost:3000");
+        const ws = new WebSocket("wss://issac-unrescued-langston.ngrok-free.dev ");
 
         ws.onopen = () => {
         console.log("WS connected, joining meeting", meetingCode);
