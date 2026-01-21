@@ -9,12 +9,10 @@ if (!isset($_SESSION['user_id'])) {
 
 $userID = $_SESSION['user_id'];
 
-// Fetch meetings with host info
+// Fetch all meetings where user takes part
 $sql = "
-    SELECT DISTINCT m.id, m.code, m.status, m.start_time, m.duration_minutes, m.end_time,
-           u.username AS host_name
+    SELECT DISTINCT m.id, m.code, m.status, m.start_time, m.duration_minutes
     FROM meetings m
-    JOIN users u ON m.host_id = u.id
     LEFT JOIN participants p ON m.id = p.meeting_id
     WHERE m.host_id = ? OR p.user_id = ?
     ORDER BY m.start_time DESC
@@ -24,17 +22,21 @@ $stmt = $connection->prepare($sql);
 $stmt->execute([$userID, $userID]);
 $meetings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch participants per meeting (host included, no duplicates)
+// Fetch participants per meeting (HOST INCLUDED, NO DUPLICATES)
 $meeting_participants = [];
+
 foreach ($meetings as $meeting) {
     $stmt = $connection->prepare("
         SELECT u.username, u.profile_photo, p.role
         FROM participants p
         JOIN users u ON u.id = p.user_id
         WHERE p.meeting_id = ?
-        ORDER BY CASE WHEN p.role='host' THEN 0 ELSE 1 END, p.joined_at ASC
+        ORDER BY 
+          CASE WHEN p.role = 'host' THEN 0 ELSE 1 END,
+          p.joined_at ASC
     ");
     $stmt->execute([$meeting['id']]);
+
     $meeting_participants[$meeting['id']] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
@@ -45,92 +47,100 @@ foreach ($meetings as $meeting) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SignConnect | Вашите срещи</title>
+
     <?php include("includes/links.php"); ?>
     <link rel="stylesheet" href="assets/css/meetings-style.css?v=2">
 </head>
+
 <body>
-    <header class="main-header">
-        <div class="logo">SignConnect</div>
-        <nav class="account-nav">
-            <a href="index.php">Начало</a>
-            <a class="active" href="meetings.php">Срещи</a>
-            <a href="account.php">Акаунт</a>
-        </nav>
-    </header>
+<header class="main-header">
+    <div class="logo">SignConnect</div>
+    <nav class="account-nav">
+        <a href="index.php">Начало</a>
+        <a class="active" href="meetings.php">Срещи</a>
+        <a href="account.php">Акаунт</a>
+    </nav>
+</header>
 
-    <main class="main">
-        <div class="top-meetings-card">
-            <h2>Вашите срещи</h2>
-            <div class="meeting-actions">
-                <div class="enter-meeting">
-                    <input type="text" id="meetingCodeInput" placeholder="Въведете код за присъединяване">
-                    <button onclick="joinMeeting()">Влез</button>
-                </div>
+<main class="main">
+    <div class="top-meetings-card">
+        <h2>Вашите срещи</h2>
 
-                <div class="create-meeting">
-                    <button class="new-meeting-btn">Стартирай нова среща</button>
-                </div>
+        <div class="meeting-actions">
+            <div class="enter-meeting">
+                <input type="text" id="meetingCodeInput" placeholder="Въведете код за присъединяване">
+                <button onclick="joinMeeting()">Влез</button>
+            </div>
+
+            <div class="create-meeting">
+                <button class="new-meeting-btn"> 
+                    <span>Стартирай нова среща</span> 
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20"> 
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/> 
+                    </svg> 
+                </button>
             </div>
         </div>
+    </div>
 
-        <div class="meetings-list">
-            <?php if ($meetings): ?>
-                <?php foreach ($meetings as $meeting):
-                    $start = strtotime($meeting['start_time']);
-                    $end   = $meeting['end_time'] ? strtotime($meeting['end_time']) : null;
-                    $status = $end ? round(($end - $start)/60) . ' мин' : 'Ongoing';
-                    $participants = $meeting_participants[$meeting['id']];
-                ?>
-                    <div class="meeting-card">
-                        <div class="left">
-                            <div class="meeting-info">
-                                <span class="title">Код:</span>
-                                <span class="code"><?= htmlspecialchars($meeting['code']) ?></span>
-                            </div>
-                            <div class="participants-list">
-                                <?php foreach ($participants as $participant): ?>
-                                    <div class="participant">
-                                        <img src="assets/images/<?= htmlspecialchars($participant['profile_photo'] ?: 'default-pfp.png') ?>" 
-                                            alt="<?= htmlspecialchars($participant['username']) ?>">
-                                        <span class="participant-name">
-                                            <?= htmlspecialchars($participant['username']) ?>
-                                            <?= $participant['role'] === 'host' ? " (Host)" : "" ?>
-                                        </span>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
+    <div class="meetings-list">
+        <?php if ($meetings): ?>
+            <?php foreach ($meetings as $meeting): ?>
+                <div class="meeting-card">
+
+                    <div class="left">
+                        <div class="meeting-info">
+                            <span class="title">Код:</span>
+                            <span class="code"><?= htmlspecialchars($meeting['code']) ?></span>
                         </div>
 
-                        <div class="right">
-                            <span class="datetime"><?= date('d.m.Y · H:i', $start) ?></span>
-                            <span class="duration"><?= $status ?></span>
+                        <div class="participants-list">
+                            <?php foreach ($meeting_participants[$meeting['id']] as $p): ?>
+                                <div class="participant">
+                                    <img src="assets/images/<?= htmlspecialchars($p['profile_photo'] ?: 'default-pfp.png') ?>">
+                                    <span class="participant-name">
+                                        <?= htmlspecialchars($p['username']) ?>
+                                        <?= $p['role'] === 'host' ? ' (Host)' : '' ?>
+                                    </span>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <div class="no-meetings">
-                    <p>Няма проведени видеоконференции за показване.</p>
+
+                    <div class="right">
+                        <span class="datetime">
+                            <?= date('d.m.Y · H:i', strtotime($meeting['start_time'])) ?>
+                        </span>
+                        <span class="duration">
+                            <?= $meeting['duration_minutes'] ?> мин
+                        </span>
+                    </div>
+
                 </div>
-            <?php endif; ?>
-        </div>
-    </main>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="no-meetings">
+                <p>Няма проведени видеоконференции за показване.</p>
+            </div>
+        <?php endif; ?>
+    </div>
+</main>
 
-    <footer>
-        © 2025 SignConnect. Всички права запазени.
-    </footer>
+<footer>
+    © 2025 SignConnect. Всички права запазени.
+</footer>
 
+<script>
+document.querySelector(".new-meeting-btn").addEventListener("click", () => {
+    window.location.href = "assets/action-files/create-meeting.php";
+});
 
-    <script>
-        document.querySelector(".new-meeting-btn").addEventListener("click", () => {
-            window.location.href = "assets/action-files/create-meeting.php";
-        });
-
-        function joinMeeting() {
-            const code = document.getElementById("meetingCodeInput").value.trim();
-            if (!code) return alert("Въведете код");
-            window.location.href = "assets/action-files/join-meeting.php?code=" + code;
-        }
-    </script>
+function joinMeeting() {
+    const code = document.getElementById("meetingCodeInput").value.trim();
+    if (!code) return alert("Въведете код");
+    window.location.href = "assets/action-files/join-meeting.php?code=" + code;
+}
+</script>
 
 </body>
 </html>
