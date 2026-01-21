@@ -20,7 +20,7 @@ wss.on("connection", (ws) => {
       console.log(`User joined meeting ${meetingCode}`);
 
       // If 2 participants are in the meeting, tell them to start the call
-      if (meetings[meetingCode].length === 2) {
+      if (meetings[meetingCode].length >= 2) {
         meetings[meetingCode].forEach(client => {
           if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify({ type: "start-call" }));
@@ -35,7 +35,7 @@ wss.on("connection", (ws) => {
     if (meetingCode && meetings[meetingCode]) {
       meetings[meetingCode].forEach(client => {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify({ ...data, from: ws._id }));
+          client.send(JSON.stringify(data));
         }
       });
     }

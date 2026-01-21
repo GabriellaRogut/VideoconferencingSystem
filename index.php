@@ -193,6 +193,9 @@ include_once("includes/connection.php");
         document.getElementById('closeModal').addEventListener('click',()=> modal.classList.remove('active'));
         window.addEventListener('click', e=> {if(e.target===modal) modal.classList.remove('active');});
 
+
+
+    // MODALS
         // Tabs & toggle logic
         const signupTab = document.getElementById('signupTab');
         const loginTab = document.getElementById('loginTab');

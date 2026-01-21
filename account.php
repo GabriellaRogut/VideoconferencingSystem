@@ -201,7 +201,7 @@ if (!$user) {
 
 
 <!-- DELETE ACCOUNT MODAL -->
-<div id="deleteModal" class="modal">
+<div id="deleteModal" class="del-modal">
     <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Сигурни ли сте, че искате да изтриете профила си?</h2>
@@ -221,77 +221,76 @@ if (!$user) {
 </html>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const editBtn = document.querySelector(".edit-btn");
-    const cancelBtn = document.querySelector(".cancel-btn");
-    const viewDiv = document.getElementById("view-account");
-    const editDiv = document.getElementById("edit-account");
+    document.addEventListener("DOMContentLoaded", () => {
+        const editBtn = document.querySelector(".edit-btn");
+        const cancelBtn = document.querySelector(".cancel-btn");
+        const viewDiv = document.getElementById("view-account");
+        const editDiv = document.getElementById("edit-account");
 
-    // Open edit mode
-    editBtn.addEventListener("click", () => {
-        viewDiv.style.display = "none";
-        editDiv.style.display = "block";
-    });
+        // open edit mode
+        editBtn.addEventListener("click", () => {
+            viewDiv.style.display = "none";
+            editDiv.style.display = "block";
+        });
 
-    // Cancel and return to view mode without submitting
-    cancelBtn.addEventListener("click", () => {
-        editDiv.style.display = "none";
-        viewDiv.style.display = "block";
+        // cancel 
+        cancelBtn.addEventListener("click", () => {
+            editDiv.style.display = "none";
+            viewDiv.style.display = "block";
+        });
     });
-});
 </script>
 
 
 <!-- delete modal js -->
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.getElementById("deleteModal");
+    document.addEventListener("DOMContentLoaded", () => {
+        const deleteModal = document.getElementById("deleteModal");
 
-    const openBtns = document.querySelectorAll(".open-delete-modal");
-    const closeBtn = modal.querySelector(".close");
-    const cancelBtn = modal.querySelector(".modal-cancel");
+        document.querySelectorAll(".open-delete-modal").forEach(btn => {
+            btn.addEventListener("click", () => {
+                deleteModal.style.display = "block";
+            });
+        });
 
-    // Open modal
-    openBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-            modal.style.display = "block";
+        deleteModal.querySelector(".close").onclick = () => {
+            deleteModal.style.display = "none";
+        };
+
+        deleteModal.querySelector(".modal-cancel").onclick = () => {
+            deleteModal.style.display = "none";
+        };
+
+        deleteModal.addEventListener("click", (e) => {
+            if (e.target === deleteModal) {
+                deleteModal.style.display = "none";
+            }
         });
     });
-
-    // Close modal
-    closeBtn.addEventListener("click", () => modal.style.display = "none");
-    cancelBtn.addEventListener("click", () => modal.style.display = "none");
-
-    // Close modal if clicking outside modal content
-    window.addEventListener("click", (e) => {
-        if (e.target === modal) modal.style.display = "none";
-    });
-});
-
 </script>
 
 
 <!-- change theme js -->
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const themeSwitch = document.getElementById("themeSwitch");
+    document.addEventListener("DOMContentLoaded", () => {
+        const themeSwitch = document.getElementById("themeSwitch");
 
-    // Load saved theme from localStorage
-    if (localStorage.getItem("theme") === "dark") {
-        document.documentElement.classList.add("dark-mode"); 
-        themeSwitch.checked = true;
-    }
-
-    // Toggle theme on change
-    themeSwitch.addEventListener("change", () => {
-        if (themeSwitch.checked) {
+        // Load saved theme from localStorage
+        if (localStorage.getItem("theme") === "dark") {
             document.documentElement.classList.add("dark-mode"); 
-            localStorage.setItem("theme", "dark");
-        } else {
-            document.documentElement.classList.remove("dark-mode"); 
-            localStorage.setItem("theme", "light");
+            themeSwitch.checked = true;
         }
+
+        // Toggle theme on change
+        themeSwitch.addEventListener("change", () => {
+            if (themeSwitch.checked) {
+                document.documentElement.classList.add("dark-mode"); 
+                localStorage.setItem("theme", "dark");
+            } else {
+                document.documentElement.classList.remove("dark-mode"); 
+                localStorage.setItem("theme", "light");
+            }
+        });
     });
-});
 </script>
 

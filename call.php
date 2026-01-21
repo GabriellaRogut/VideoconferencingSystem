@@ -9,7 +9,11 @@ if (!isset($_SESSION['user_id'])) {
 
 $userID = $_SESSION['user_id'];
 
-$stmt = $connection->prepare("SELECT username, profile_photo FROM users WHERE id = ?");
+$stmt = $connection->prepare("
+    SELECT username, profile_photo 
+    FROM users 
+    WHERE id = ?
+");
 $stmt->execute([$userID]);
 $localUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -19,8 +23,9 @@ $local_username = $localUser['username'];
 
 
 // Get meeting code from URL
-// $meeting_code = $_GET['code'] ?? null;
-$meeting_code = "TEST123";
+// $meeting_code = "TEST123";
+$meeting_code = $_GET['code'] ?? null;
+
 
 
 if (!$meeting_code) {

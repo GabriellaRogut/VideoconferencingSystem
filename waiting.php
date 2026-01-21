@@ -66,7 +66,7 @@
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
             localVideo.srcObject = stream;
-            window.localStream = stream; // save globally for later use
+            window.localStream = stream;
         } catch(e) {
             console.error('Грешка при достъп до камерата и микрофона', e);
             alert('Не може да се достъпи камерата или микрофона');
@@ -96,6 +96,34 @@
         }
         });
     </script>
+
+
+    <script>
+        const meetingCode = "<?= $code ?>";
+        const ws = new WebSocket("ws://localhost:3000");
+
+        ws.onopen = () => {
+        console.log("WS connected, joining meeting", meetingCode);
+        ws.send(JSON.stringify({
+            type: "join",
+            code: meetingCode
+        }));
+        };
+
+        ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log("WS message:", data);
+
+        if (data.type === "start-call") {
+            window.location.href = "call.php?code=" + meetingCode;
+        }
+        };
+
+        ws.onerror = (e) => {
+        console.error("WebSocket error", e);
+        };
+    </script>
+
 
 </body>
 </html>
