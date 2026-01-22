@@ -1,0 +1,295 @@
+nav {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.account-btn {
+    font-size: 20px;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 50%;
+    background: var(--color-no-meetings-bg);
+    color: var(--color-no-meetings-text);
+}
+
+.leave-btn {
+    background: none;
+    padding: 10px 10px;
+}
+
+.account-btn:hover {
+    color: var(--waiting-header-txt);
+}
+
+.feature-card h3 {
+    color: var(--meeting-header-card-txt);
+}
+
+.logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-badge {
+    background: linear-gradient(135deg, #ff6b6b, #c0392b);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px #00000026;
+}
+
+
+/* USERS TABLE */
+.admin-users {
+    margin: 40px auto;
+    width: 95%;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: var(--color-white);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.admin-table thead {
+    background: var(--header-txt-call);
+    color: var(--color-white);
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 15px;
+}
+
+.admin-table tbody tr {
+    border-bottom: 1px solid #eee;
+}
+
+.admin-table tbody tr:hover {
+    background: var(--msgs-bgr);
+}
+
+.admin-table .empty {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+.role {
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.role.admin {
+    background: #ffe4e4;
+    color: #b10000;
+}
+
+.role.user {
+    background: #e4f0ff;
+    color: #004aad;
+}
+
+
+/* actions */
+.actions-td {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 40px;
+}
+
+.action-btn {
+    border-radius: 30px;
+    padding: 6px 14px;
+    border: none;
+    cursor: pointer;
+    color: var(--white);
+}
+
+.upd-btn {
+    background: #80a380;
+}
+
+.del-btn {
+    background: var(--red);
+}
+
+
+
+/* UPDATE MODAL */
+.admin-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: #00000073;
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s ease;
+    z-index: 9999;
+}
+
+.admin-modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.admin-modal {
+    background: linear-gradient(145deg, var(--color-white), var(--color-bg));
+    border-radius: 18px;
+    padding: 30px 35px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+    transform: scale(0.9);
+    transition: 0.3s ease;
+}
+
+.admin-modal-overlay.active .admin-modal {
+    transform: scale(1);
+}
+
+.admin-modal h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--color-primary);
+}
+
+.modal-field {
+    margin-bottom: 16px;
+}
+
+.modal-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--input-color-txt);
+}
+
+.modal-field input,
+.modal-field select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: var(--input-border);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 14px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 35px;
+}
+
+.modal-cancel {
+    background: transparent;
+    border: 1px solid var(--color-primary);
+    padding: 10px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    color: var(--color-text);
+}
+
+.modal-save {
+    background: var(--gradient-bg);
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    color: var(--color-white);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.modal-save:hover {
+    opacity: 0.9;
+}
+
+.modal-cancel:hover, .modal-save:hover {
+    transform: scale(1.02);
+}
+
+
+/* DELETE MODAL */
+.delete-modal {
+    background: var(--color-white); 
+    padding: 30px 25px;
+    max-width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    text-align: center;
+}
+
+.delete-modal h2 {
+    font-size: 1.4rem;
+    color: #333;
+    margin-bottom: 18px;
+    font-weight: 600;
+}
+
+.delete-warning {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.modal-cancel {
+    flex: 1;
+    background: #f0f0f0;
+    color: #333;
+    border: none;
+    padding: 10px 0;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.modal-cancel:hover {
+    background: #e0e0e0;
+}
+
+.modal-delete {
+    flex: 1;
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    padding: 10px 0;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.modal-delete:hover {
+    opacity: 0.9;
+    background-color: var(--red-hover);
+}

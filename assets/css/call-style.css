@@ -27,8 +27,10 @@
 }
 
 
-/* Subtitles inside video card */
+/* Subtitles */
 .subtitle {
+  display: none;
+
   position: absolute;
   bottom: 40px;
   left: 50%;
@@ -48,12 +50,6 @@
   opacity: 0;
   transition: opacity 0.25s ease;
 }
-
-/* subtitles active */
-.subtitle.show {
-  opacity: 1;
-}
-
 
 /* SIDEBAR */
 .sidebar {
@@ -108,7 +104,6 @@
   transform: scale(1.02);
 }
 
-
 .video-area {
   margin-top: 25px;
 
@@ -136,7 +131,6 @@
   overflow: hidden;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
 }
-
 
 /* speaking user card */
 .video-card-speaking {
@@ -170,7 +164,7 @@
   animation: neonPulse 2.5s ease-in-out infinite;
 }
 
-/* Username bubble */
+/* username bubble */
 .video-card .username-bubble {
   position: absolute;
   bottom: 10px;
@@ -185,41 +179,11 @@
   white-space: nowrap;
 }
 
-
 .video-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
-
-/* grid for more people ?? */
-/* 1 participant → full width */
-/* .video-grid {
-  grid-template-columns: 1fr;
-}
-
-/* 2 participants → side by side */
-/* .video-grid:has(.video-card:nth-child(2)):not(:has(.video-card:nth-child(3))) {
-  grid-template-columns: 1fr 1fr;
-}
-
-/* 3–4 participants → 2x2 grid */
-/* .video-grid:has(.video-card:nth-child(3)),
-.video-grid:has(.video-card:nth-child(4)) {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-/* 5–9 participants → 3x3 */
-/* .video-grid:has(.video-card:nth-child(5)) {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-/* 10–16 participants → 4x4 */
-/* .video-grid:has(.video-card:nth-child(10)) {
-  grid-template-columns: repeat(4, 1fr);
-}   */
-
 
 
 /* CONTROLS */
@@ -307,7 +271,6 @@
   border-radius: 4px;
 }
 
-
 .card-header {
   color: var(--header-txt-call);
   background-color: var(--header-txt-bgr-call);
@@ -317,7 +280,6 @@
   display: flex;
   justify-content: space-between;
 }
-
 
 .chat-options,
 .participants-options {
@@ -336,7 +298,6 @@
   background: rgba(95, 132, 169, 0.148);
   transform: scale(1.03);
 }
-
 
 .participants-options:hover {
   cursor: pointer;
@@ -449,10 +410,36 @@
 }
 
 
-/* Responsive adjustments */
+/* Responsive */
 @media screen and (max-width: 1200px) {
   .app {
     grid-template-columns: 60px 1fr;
+  }
+
+  /* show toggle btn only on small screens */
+  .sidebar-toggle {
+    display: block;
+  }
+
+  .right-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 350px;
+    z-index: 40;
+    padding: 25px;
+    transform: translateX(100%);
+    background-color: #062e6e4e;
+    transition: transform 0.3s ease;
+  }
+  
+  .right-sidebar.hidden {
+    transform: translateX(100%);
+  }
+
+  .right-sidebar.visible {
+    transform: translateX(0);
   }
 }
 
@@ -460,14 +447,17 @@
   .video-grid {
     grid-template-columns: 1fr !important;
   }
+
   .controls-container {
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
   }
+
   .sidebar {
     padding: 10px 5px;
   }
+
   .subtitle {
     bottom: 20px;
     max-width: 95%;
@@ -504,6 +494,7 @@
   .logo {
     margin-bottom: 0;
   }
+
   .profile-picture {
     margin-top: 0;
     width: 36px;        
@@ -518,6 +509,7 @@
     padding: 0;
     background: transparent;
   }
+
   .controls-container {
     background: #ffffff71;
     backdrop-filter: blur(10px);
@@ -525,6 +517,16 @@
     gap: 10px;
     border-radius: 10%;
     box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+  }
+
+    .text-logo {
+    flex-direction: row;
+    gap: 4px;
+    font-size: 18px;
+  }
+
+  .text-logo::after {
+    display: none;
   }
 }
 
@@ -556,32 +558,6 @@
   transition: transform 0.3s ease;
 }
 
-/* Show toggle btn only on small screens */
-@media screen and (max-width: 1200px) {
-  .sidebar-toggle {
-    display: block;
-  }
-  .right-sidebar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    height: 100%;
-    width: 350px;
-    z-index: 40;
-    padding: 25px;
-    transform: translateX(100%);
-    background-color: #062e6e4e;
-    transition: transform 0.3s ease;
-  }
-  .right-sidebar.hidden {
-    transform: translateX(100%);
-  }
-  .right-sidebar.visible {
-    transform: translateX(0);
-  }
-}
-
-
 /* logo */
 .text-logo {
   font-weight: 700;
@@ -607,16 +583,4 @@
   background: var(--color-primary-light);
   border-radius: 1px;
   margin-top: 4px;
-}
-
-@media screen and (max-width: 480px) {
-  .text-logo {
-    flex-direction: row;
-    gap: 4px;
-    font-size: 18px;
-  }
-
-  .text-logo::after {
-    display: none;
-  }
 }

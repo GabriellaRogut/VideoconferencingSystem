@@ -10,6 +10,8 @@
     <title>SignConnect | Изчакване на участници</title>
 
     <?php include("includes/links.php"); ?>
+
+    <!-- Styles -->
     <link rel="stylesheet" href="assets/css/waiting-style.css?v=2">
 </head>
 
@@ -26,10 +28,8 @@
 
             <div class="code-box">
                 <span class="code-label">Код за среща</span>
-                <div class="meeting-code"><?php echo $code; ?></div>
-                <button class="copy-btn" id="copyBtn">
-                    Копирай кода
-                </button>
+                <div class="meeting-code"><?php echo $code ?></div>
+                <button class="copy-btn" id="copyBtn">Копирай кода</button>
             </div>
 
             <!-- VIDEO PREVIEW -->
@@ -50,57 +50,36 @@
 
 
     <script>
-    // Copy meeting code
-    const copyBtn = document.getElementById('copyBtn');
-    copyBtn.addEventListener('click', () => {
-        const codeText = document.querySelector('.meeting-code').textContent;
-        navigator.clipboard.writeText(codeText).then(() => {
-            alert('Кодът е копиран в клипборда!');
+        // Copy meeting code
+        const copyBtn = document.getElementById('copyBtn');
+        copyBtn.addEventListener('click', () => {
+            const codeText = document.querySelector('.meeting-code').textContent;
+            navigator.clipboard.writeText(codeText).then(() => {
+                alert('Кодът е копиран в клипборда!');
+            });
         });
-    });
 
-    // WebRTC local preview
-    const localVideo = document.getElementById('localVideo');
+        // WebRTC local preview
+        const localVideo = document.getElementById('localVideo');
 
-    async function initLocalVideo() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            localVideo.srcObject = stream;
-            window.localStream = stream;
-        } catch(e) {
-            console.error('Грешка при достъп до камерата и микрофона', e);
-            alert('Не може да се достъпи камерата или микрофона');
+        async function initLocalVideo() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                localVideo.srcObject = stream;
+                window.localStream = stream;
+            } catch(e) {
+                console.error('Грешка при достъп до камерата и микрофона', e);
+                alert('Не може да се достъпи камерата или микрофона');
+            }
         }
-    }
 
-    initLocalVideo();
-    </script>
-
-
-
-    <script>
-        // const sidebar = document.querySelector('.right-sidebar');
-        // const toggleBtn = document.getElementById('sidebarToggle');
-
-        // toggleBtn.addEventListener('click', () => {
-        // sidebar.classList.toggle('hidden');
-
-        // // Swap arrow icon
-        // const icon = toggleBtn.querySelector('i');
-        // if (sidebar.classList.contains('hidden')) {
-        //     icon.classList.remove('fa-angle-right');
-        //     icon.classList.add('fa-angle-left');
-        // } else {
-        //     icon.classList.remove('fa-angle-left');
-        //     icon.classList.add('fa-angle-right');
-        // }
-        // });
+        initLocalVideo();
     </script>
 
 
     <script>
         const meetingCode = "<?= $code ?>";
-        const ws = new WebSocket("wss://issac-unrescued-langston.ngrok-free.dev ");
+        const ws = new WebSocket("wss://issac-unrescued-langston.ngrok-free.dev ");  // ngrok server connection
 
         ws.onopen = () => {
         console.log("WS connected, joining meeting", meetingCode);
@@ -123,7 +102,6 @@
         console.error("WebSocket error", e);
         };
     </script>
-
 
 </body>
 </html>

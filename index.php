@@ -1,6 +1,4 @@
-<?php
-include_once("includes/connection.php");
-?>
+<?php include_once("includes/connection.php"); ?>
 
 <?php
 // Log out message
@@ -31,7 +29,6 @@ include_once("includes/connection.php");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SignConnect — Видео Конференции за Всеки</title>
 
-
     <?php include("includes/links.php"); ?>
 
     <!-- Styles -->
@@ -41,7 +38,7 @@ include_once("includes/connection.php");
 
 
 <script>
-    // log out / delete acct mssgs
+    // log out / Delete acct messages
     document.addEventListener("DOMContentLoaded", () => {
         const messages = ["logoutMessage", "accountDeletedMessage"];
 
@@ -59,13 +56,8 @@ include_once("includes/connection.php");
 </script>
 
 
-</script>
 
 <body>
-
-<?php
-//print_r($_SESSION);
-?>
     <header class="main-header">
         <div class="logo">SignConnect</div>
         <div class="menu-toggle">&#9776;</div>
@@ -134,7 +126,6 @@ include_once("includes/connection.php");
                 }
             });
         </script>
-
     </section>
 
     <!-- DEMO SECTION -->
@@ -164,22 +155,25 @@ include_once("includes/connection.php");
         <button class="open-modal">Присъединете се</button>
     </section>
 
+
     <footer>
-        © 2025 SignConnect. Всички права запазени.
+        © 2025 SignConnect • Всички права запазени •
+        <a href="admin-panel/admin.php" class="admin-entry">System</a>
     </footer>
 
-    <!-- LOG IN / SIGN UP MODAL -->
 
-    <div class="modal-overlay<?php if ( isset( $_SESSION['errors_login']  ) || isset( $_SESSION['errors_signup'] ) ) echo " active" ?>" id="modal">
+    <!-- MODALS -->
+    <div class="modal-overlay<?php if ( isset($_SESSION['errors_login']) || isset($_SESSION['errors_signup']) ) echo "active" ?>" id="modal">
+       
         <div class="modal">
             <span class="close" id="closeModal">&times;</span>
             <div class="modal-tabs">
-                <button id="signupTab" class="<?php if( isset( $_SESSION['errors_signup'] ) ) echo " active-tab"  ?>">Регистрация</button>
-                <button id="loginTab" class="<?php if( isset( $_SESSION['errors_login'] ) ) echo " active-tab"  ?>">Вход</button>
+                <button id="signupTab" class="<?php if( isset($_SESSION['errors_signup']) ) echo "active-tab"  ?>">Регистрация</button>
+                <button id="loginTab" class="<?php if( isset($_SESSION['errors_login']) ) echo "active-tab"  ?>">Вход</button>
             </div>
 
             <!-- SIGN UP FORM -->
-            <form class="modal-form <?php if( isset( $_SESSION['errors_signup'] ) ) echo " active-form"  ?>""  method="POST" id="signupForm" action="assets/action-files/signup.php">
+            <form class="modal-form <?php if( isset($_SESSION['errors_signup']) ) echo "active-form"  ?>""  method="POST" id="signupForm" action="assets/action-files/signup.php">
                 <input type="text" name="username" placeholder="Потребителско име" required>
                 <input type="email" name="email" placeholder="Имейл" required>
                 <input type="password" name="password" placeholder="Парола" required>
@@ -202,9 +196,8 @@ include_once("includes/connection.php");
             </form>
 
 
-
             <!-- LOG IN FORM -->
-            <form class="modal-form<?php if( isset( $_SESSION['errors_login'] ) ) echo " active-form"  ?>" method="POST" id="loginForm" action="assets/action-files/login.php">
+            <form class="modal-form<?php if( isset($_SESSION['errors_login']) ) echo "active-form"  ?>" method="POST" id="loginForm" action="assets/action-files/login.php">
                 <input type="email" name="email" placeholder="Имейл" required>
                 <input type="password" name="password" placeholder="Парола" required>
                 <button type="submit" name="login" value="login">Вход</button>
@@ -225,25 +218,18 @@ include_once("includes/connection.php");
                 ?>
             </form>
         </div>
+
     </div>
 
-    <script>
-        // Feature fade-in on scroll
-        const cards = document.querySelectorAll('.feature-card');
-        const observer = new IntersectionObserver(entries=>{
-            entries.forEach(entry=>{
-                if(entry.isIntersecting){entry.target.classList.add('visible');}
-            });
-        },{threshold:0.2});
-        cards.forEach(card=>observer.observe(card));
 
+    <!-- SCRIPTS -->
+     
+    <!-- modals -->
+    <script>
         document.getElementById('closeModal').addEventListener('click',()=> modal.classList.remove('active'));
         window.addEventListener('click', e=> {if(e.target===modal) modal.classList.remove('active');});
 
 
-
-    // MODALS
-        // Tabs & toggle logic
         const signupTab = document.getElementById('signupTab');
         const loginTab = document.getElementById('loginTab');
         const signupForm = document.getElementById('signupForm');
@@ -262,6 +248,7 @@ include_once("includes/connection.php");
  
         });
  
+        // Switch login <-> signup
         signupTab.addEventListener('click',()=>{
             signupTab.classList.add('active-tab'); loginTab.classList.remove('active-tab');
             signupForm.classList.add('active-form'); loginForm.classList.remove('active-form');

@@ -9,7 +9,7 @@ if (menuToggle && nav) {
 }
 
 
-// color theme js
+// COLOR THEME 
 document.addEventListener("DOMContentLoaded", () => {
     // check localStorage on page load
     const savedTheme = localStorage.getItem("theme");
@@ -20,3 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+
+// fade-in on scroll (features and cards)
+const cards = document.querySelectorAll('.feature-card');
+if (cards) {
+    const observer = new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+            if(entry.isIntersecting){entry.target.classList.add('visible');}
+        });
+    },{threshold:0.2});
+    cards.forEach(card=>observer.observe(card));
+}
+  

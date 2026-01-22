@@ -1,3 +1,4 @@
+/* LIGHT MODE */
 :root {
     --white: #FFFFFF;
 
@@ -42,7 +43,7 @@
     --toggle-ball: var(--color-bg)
 }
 
-/* DARK MODE  */
+/* DARK MODE */
 :root.dark-mode {
     --white: #FFFFFF;
 
@@ -156,7 +157,7 @@ nav a:hover {
 }
 
 
-/* Mobile */
+/* Mobile header */
 @media screen and (max-width: 768px) {
   .main-header {
     flex-direction: row;
@@ -188,6 +189,7 @@ nav a:hover {
   }
 }
 
+
 /* FOOTER */
 footer {
   background: var(--color-white); 
@@ -203,3 +205,29 @@ footer {
     color: #a11919 !important;
     font-size: 13px;
 }
+
+/* ADMIN */
+.admin-entry {
+    position: relative;
+    color: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+    padding-right: 18px;
+}
+
+.admin-entry::after {
+    content: "🔒";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) scale(0.8);
+    font-size: 0.75rem;
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.2s ease;
+}
+
+.admin-entry:hover::after {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+

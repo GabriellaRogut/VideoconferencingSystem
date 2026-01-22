@@ -17,10 +17,11 @@
     }
 
     $stmt = $connection->prepare("
-    INSERT IGNORE INTO participants (meeting_id, user_id, role)
-    VALUES (?, ?, 'participant')
+        INSERT IGNORE INTO participants (meeting_id, user_id, role)
+        VALUES (?, ?, 'participant')
     ");
     $stmt->execute([$meeting['id'], $userID]);
 
     header("Location: ../../waiting.php?code=$code");
-exit;
+    exit;
+?>

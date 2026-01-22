@@ -1,4 +1,4 @@
-/* --- MAIN CONTAINER --- */
+/* MAIN CONTAINER */
 .main {
     display: flex;
     flex-direction: column;
@@ -7,7 +7,7 @@
     background: var(--meetings-page-bg);
 }
 
-/* --- TOP CARD --- */
+/* TOP CARD - actions */
 .top-meetings-card {
     display: flex;
     flex-direction: column;
@@ -49,7 +49,7 @@
     z-index: 1;
 }
 
-/* --- MEETING ACTIONS --- */
+/* MEETING ACTIONS */
 .meeting-actions {
     display: flex;
     justify-content: space-between;
@@ -59,7 +59,7 @@
     z-index: 1;
 }
 
-/* --- ENTER MEETING - LEFT --- */
+/* enter meeting */
 .enter-meeting {
     flex: 1;
     display: flex;
@@ -102,7 +102,7 @@
     box-shadow: 0 10px 20px rgba(0,0,0,0.18);
 }
 
-/* --- CREATE NEW MEETING RIGHT --- */
+/* --- new meeting --- */
 .create-meeting {
     display: flex;
     justify-content: flex-end;
@@ -151,7 +151,6 @@
     margin: 20px 0;
 }
 
-
 /* --- MEETINGS LIST --- */
 .meetings-list {
     display: flex;
@@ -179,14 +178,12 @@
     box-shadow: 0 12px 28px #00000024;
 }
 
-
 .meeting-card .left {
     display: flex;
     flex-direction: column;
     gap: 10px;
     flex: 1 1 60%; 
 }
-
 
 .meeting-card .right {
     display: flex;
