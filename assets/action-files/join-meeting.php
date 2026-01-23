@@ -18,7 +18,7 @@
 
     $stmt = $connection->prepare("
         INSERT IGNORE INTO participants (meeting_id, user_id, role)
-        VALUES (?, ?, 'participant')
+        VALUES (?, ?, 'joiner')
     ");
     $stmt->execute([$meeting['id'], $userID]);
 

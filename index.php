@@ -1,4 +1,6 @@
-<?php include_once("includes/connection.php"); ?>
+<?php
+include_once("includes/connection.php");
+?>
 
 <?php
 // Log out message
@@ -38,7 +40,7 @@
 
 
 <script>
-    // log out / Delete acct messages
+    // log out / delete acct mssgs
     document.addEventListener("DOMContentLoaded", () => {
         const messages = ["logoutMessage", "accountDeletedMessage"];
 
@@ -56,6 +58,7 @@
 </script>
 
 
+</script>
 
 <body>
     <header class="main-header">
@@ -110,7 +113,7 @@
             <h3>Сигурност & Поверителност</h3>
             <p>Криптиране от край до край гарантира, че разговорите остават конфиденциални.</p>
         </div>
-
+ 
         <script>
             const isDark = localStorage.getItem("theme") === "dark";
             const color = isDark ? "8ea0d2" : "2D5BE3";
@@ -126,6 +129,7 @@
                 }
             });
         </script>
+
     </section>
 
     <!-- DEMO SECTION -->
@@ -155,25 +159,23 @@
         <button class="open-modal">Присъединете се</button>
     </section>
 
-
     <footer>
-        © 2025 SignConnect • Всички права запазени •
+        © 2025 SignConnect. Всички права запазени.
         <a href="admin-panel/admin.php" class="admin-entry">System</a>
     </footer>
 
 
     <!-- MODALS -->
-    <div class="modal-overlay<?php if ( isset($_SESSION['errors_login']) || isset($_SESSION['errors_signup']) ) echo "active" ?>" id="modal">
-       
+    <div class="modal-overlay<?php if ( isset( $_SESSION['errors_login']  ) || isset( $_SESSION['errors_signup'] ) ) echo " active" ?>" id="modal">
         <div class="modal">
             <span class="close" id="closeModal">&times;</span>
             <div class="modal-tabs">
-                <button id="signupTab" class="<?php if( isset($_SESSION['errors_signup']) ) echo "active-tab"  ?>">Регистрация</button>
-                <button id="loginTab" class="<?php if( isset($_SESSION['errors_login']) ) echo "active-tab"  ?>">Вход</button>
+                <button id="signupTab" class="<?php if( isset( $_SESSION['errors_signup'] ) ) echo " active-tab"  ?>">Регистрация</button>
+                <button id="loginTab" class="<?php if( isset( $_SESSION['errors_login'] ) ) echo " active-tab"  ?>">Вход</button>
             </div>
 
             <!-- SIGN UP FORM -->
-            <form class="modal-form <?php if( isset($_SESSION['errors_signup']) ) echo "active-form"  ?>""  method="POST" id="signupForm" action="assets/action-files/signup.php">
+            <form class="modal-form <?php if( isset( $_SESSION['errors_signup'] ) ) echo " active-form"  ?>""  method="POST" id="signupForm" action="assets/action-files/signup.php">
                 <input type="text" name="username" placeholder="Потребителско име" required>
                 <input type="email" name="email" placeholder="Имейл" required>
                 <input type="password" name="password" placeholder="Парола" required>
@@ -197,7 +199,7 @@
 
 
             <!-- LOG IN FORM -->
-            <form class="modal-form<?php if( isset($_SESSION['errors_login']) ) echo "active-form"  ?>" method="POST" id="loginForm" action="assets/action-files/login.php">
+            <form class="modal-form<?php if( isset( $_SESSION['errors_login'] ) ) echo " active-form"  ?>" method="POST" id="loginForm" action="assets/action-files/login.php">
                 <input type="email" name="email" placeholder="Имейл" required>
                 <input type="password" name="password" placeholder="Парола" required>
                 <button type="submit" name="login" value="login">Вход</button>
@@ -218,18 +220,11 @@
                 ?>
             </form>
         </div>
-
     </div>
 
-
-    <!-- SCRIPTS -->
-     
-    <!-- modals -->
+    <!-- MODALS -->
     <script>
-        document.getElementById('closeModal').addEventListener('click',()=> modal.classList.remove('active'));
-        window.addEventListener('click', e=> {if(e.target===modal) modal.classList.remove('active');});
-
-
+        // Tabs & toggle logic
         const signupTab = document.getElementById('signupTab');
         const loginTab = document.getElementById('loginTab');
         const signupForm = document.getElementById('signupForm');
@@ -237,7 +232,7 @@
         const switchToLogin = document.getElementById('switchToLogin');
         const switchToSignup = document.getElementById('switchToSignup');
 
-        // Modal open/close
+        // open modal
         const modal = document.getElementById('modal');
         document.querySelectorAll('.open-modal').forEach(btn=>{
             btn.addEventListener('click',()=> { 
@@ -247,8 +242,13 @@
             } );
  
         });
+
+        // close modal
+        document.getElementById('closeModal')
+            .addEventListener('click', () => modal.classList.remove('active'));
+
  
-        // Switch login <-> signup
+        // Switch by tabs
         signupTab.addEventListener('click',()=>{
             signupTab.classList.add('active-tab'); loginTab.classList.remove('active-tab');
             signupForm.classList.add('active-form'); loginForm.classList.remove('active-form');
@@ -257,13 +257,13 @@
             loginTab.classList.add('active-tab'); signupTab.classList.remove('active-tab');
             loginForm.classList.add('active-form'); signupForm.classList.remove('active-form');
         });
+
+        // Switch login <-> signup
         switchToLogin.addEventListener('click',()=> loginTab.click());
         switchToSignup.addEventListener('click',()=> signupTab.click());
     </script>
 
 
-
 </body>
 </html>
-
 
