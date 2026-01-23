@@ -56,7 +56,7 @@
   $participants = $stmt->fetchAll();
 
   // Local user name
-  $local_username = $_SESSION['username'];
+  // $local_username = $_SESSION['username'];
 ?>
 
 
@@ -111,7 +111,6 @@
                 <div class="username-bubble">
                   <i class="fa-solid fa-user"></i> Вие
                 </div>
-                <div class="subtitle show">Това са примерни субтитри.</div> <!-- .show on active subtitles !!! -->
               </div>
 
           <?php 
@@ -127,6 +126,9 @@
                 <div class="username-bubble">
                   <i class="fa-solid fa-user"></i> <?= htmlspecialchars($p['username']) ?>
                 </div>
+
+                <div class="subtitle speech-subtitle active">Това са примерни субтитри за говор.</div>
+                <div class="subtitle sign-subtitle">Това са примерни субтитри за жестомимичен език.</div>
               </div>
           <?php 
             } 
@@ -146,10 +148,21 @@
         <div class="controls-container">
           <button id="muteBtn"><i class="fa-solid fa-microphone-lines"></i></button>
           <button id="camBtn"><i class="fa-solid fa-video"></i></button>
-          <button class="end-btn leave-btn"><i class="fa-solid fa-right-from-bracket"></i></button>
-          <button class="end-btn leave-btn"><i class="fa-solid fa-phone-slash"></i></button>
-          <button><i class="fa-solid fa-hands-asl-interpreting"></i></button>
-          <button><i class="fa-solid fa-closed-captioning"></i></button>
+          <button class="end-btn leave-btn" onclick="leaveMeeting()"><i class="fa-solid fa-right-from-bracket"></i></button>
+
+          <!-- end call accessible only for host -->
+          <?php
+            foreach($participants as $p){
+                if($p['username'] == $local_username && $p['role'] == 'host'){
+          ?>
+                  <a class="end-btn leave-btn" href="assets/action-files/end-meeting.php?code=<?= htmlspecialchars($meeting['code']) ?>"><i class="fa-solid fa-phone-slash"></i></a>
+          <?php
+                  break; 
+                }
+            }
+          ?>
+          <button id="signSubBtn"><i class="fa-solid fa-hands-asl-interpreting"></i></button>
+          <button id="speechSubBtn"><i class="fa-solid fa-closed-captioning"></i></button>
         </div>
       </footer>
     </main>
@@ -161,7 +174,7 @@
       <section class="participants card">
         <div class="card-header">
           <h3>Участници <span>(<?= count($participants) ?>)</span></h3>
-          <i class="fa-solid fa-user-plus participants-options"></i>
+          <i class="fa-solid fa-user-plus participants-options copy-code-btn" data-code="<?= htmlspecialchars($meeting['code']) ?>"></i>
         </div>
         <ul>
           <?php foreach ($participants as $index => $participant){ ?>
@@ -169,7 +182,7 @@
                 <img class="avatar" src="assets/images/<?= htmlspecialchars($participant['profile_photo']) ?>" alt="<?= htmlspecialchars($participant['username']) ?>">
                 <?= htmlspecialchars($participant['username']) ?> <?php if($participant['role'] == "host"){ echo("(Host)");} ?>
               </li>
-            <?php } ?>
+          <?php } ?>
         </ul>
       </section>
 
@@ -301,6 +314,84 @@
       }
     });
   </script>
+
+
+  <!-- END MEETING REDIRECT (CHECK STATUS) -->
+  <script>
+    setInterval(() => {
+        fetch(`assets/action-files/check-meeting-status.php?code=<?= $meeting['code'] ?>`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'ended') {
+                    window.location.href = 'meetings.php?meeting_ended=1';
+                }
+            });
+    }, 5000); 
+  </script>
+
+  <!-- LEAVE MEETING -->
+  <script>
+    function leaveMeeting() {
+        // Redirect to meetings.php with a GET parameter for flash message
+        window.location.href = 'meetings.php?left_meeting=1';
+    }
+  </script>
+
+  <!-- Copy Code (add participant) -->
+  <script>
+  document.querySelector(".copy-code-btn").addEventListener("click", function () {
+      const code = this.dataset.code;
+
+      navigator.clipboard.writeText(code).then(() => {
+          // Change tooltip text temporarily
+          const el = this;
+          el.setAttribute("data-original", el.getAttribute("data-code"));
+
+          el.style.setProperty('--tooltip-text', '"Кодът е копиран!"');
+
+          // Quick visual feedback
+          el.style.transform = "scale(1.2)";
+          setTimeout(() => el.style.transform = "scale(1)", 200);
+
+          // Temporary tooltip change
+          el.classList.add("copied");
+          setTimeout(() => el.classList.remove("copied"), 1500);
+      });
+  });
+  </script>
+
+
+  <!-- SUBTITLES -->
+  <script>
+    const signBtn = document.getElementById("signSubBtn");
+    const speechBtn = document.getElementById("speechSubBtn");
+
+    let signOn = false;
+    let speechOn = false;
+
+    // SIGN LANGUAGE → TEXT
+    signBtn.addEventListener("click", () => {
+        signOn = !signOn;
+
+        document.querySelectorAll(".sign-subtitle").forEach(el => {
+            el.style.display = signOn ? "block" : "none";
+        });
+
+        signBtn.classList.toggle("off", !signOn);
+    });
+
+    // SPEECH → TEXT
+    speechBtn.addEventListener("click", () => {
+        speechOn = !speechOn;
+
+        document.querySelectorAll(".speech-subtitle").forEach(el => {
+            el.style.display = speechOn ? "block" : "none";
+        });
+
+        speechBtn.classList.toggle("off", !speechOn);
+    });
+  </script>
+
 
   <script src="assets/js/webrtc.js"></script>
 

@@ -55,8 +55,28 @@
 </head>
 
 <body>
+
+    <?php
+    // Meeting ended flash message
+    if (isset($_GET['meeting_ended']) && $_GET['meeting_ended'] == 1) { ?>
+        <div id="meetingEndedMessage" class="logout-message">
+            Срещата приключи.
+        </div>
+    <?php } ?>
+
+    <?php
+    // Flash message for leaving the meeting
+    if (isset($_GET['left_meeting']) && $_GET['left_meeting'] == 1) { ?>
+        <div id="leftMeetingMessage" class="logout-message">
+            Напуснахте срещата.
+        </div>
+    <?php } ?>
+
+
     <header class="main-header">
         <div class="logo">SignConnect</div>
+        <div class="menu-toggle">&#9776;</div>
+        
         <nav class="account-nav">
             <a href="index.php">Начало</a>
             <a class="active" href="meetings.php">Срещи</a>
@@ -72,6 +92,16 @@
                 <div class="enter-meeting">
                     <input type="text" id="meetingCodeInput" placeholder="Въведете код за присъединяване">
                     <button onclick="joinMeeting()">Влез</button>
+                    <?php
+                        if ( isset( $_SESSION['errors_meeting'] ) ) {
+
+                            foreach( $_SESSION['errors_meeting'] as $error ) {
+                                echo "<div class='error'>". $error . "</div>";
+
+                                unset( $_SESSION['errors_meeting'] );
+                            }
+                        }
+                    ?>
                 </div>
 
                 <div class="create-meeting">
@@ -161,6 +191,25 @@
             window.location.href = "assets/action-files/join-meeting.php?code=" + code;
         }
     </script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const messages = ["logoutMessage", "accountDeletedMessage", "meetingEndedMessage", "leftMeetingMessage"];
+
+    messages.forEach(id => {
+        const msg = document.getElementById(id);
+        if (msg) {
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateY(-20px)';
+                setTimeout(() => msg.remove(), 1000);
+            }, 1200);
+        }
+    });
+});
+</script>
+
 
 </body>
 </html>

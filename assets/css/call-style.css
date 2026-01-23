@@ -46,10 +46,15 @@
 
   line-height: 1.25;
   word-wrap: break-word;
-
-  opacity: 0;
   transition: opacity 0.25s ease;
 }
+
+.controls button.off {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+
 
 /* SIDEBAR */
 .sidebar {
@@ -69,7 +74,7 @@
 .profile-picture {
   margin-top: auto;
   width: 45px;
-  height: fit-content;
+  height: 45PX;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -291,6 +296,42 @@
   border-radius: 50%;
   transition: background 0.3s ease, transform 0.15s ease;
 }
+
+.copy-code-btn {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Tooltip */
+.copy-code-btn::after {
+  content: "Копирай кода";
+  font-family: "WDXL Lubrifont SC", sans-serif;
+  font-weight: 500;
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-primary-light);
+  color: var(--color-white);
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.copy-code-btn:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(4px);
+}
+
+.copy-code-btn.copied::after {
+  content: "Кодът е копиран!";
+  background: #8cd09c;
+}
+
 
 .chat-options:hover,
 .participants-options:hover {

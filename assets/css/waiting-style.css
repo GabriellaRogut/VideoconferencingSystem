@@ -153,3 +153,8 @@
   background: var(--red-hover) !important;
 }
 
+/* CONTROLS */
+.controls button.off {
+    opacity: 0.5;
+    transform: scale(0.95);
+}

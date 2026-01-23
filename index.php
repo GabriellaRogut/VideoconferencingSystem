@@ -1,6 +1,4 @@
-<?php
-include_once("includes/connection.php");
-?>
+<?php include_once("includes/connection.php"); ?>
 
 <?php
 // Log out message

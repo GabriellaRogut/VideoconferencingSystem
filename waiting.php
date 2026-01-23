@@ -103,5 +103,46 @@
         };
     </script>
 
+    <!-- CONTROLS -->
+    <script>
+        const micBtn = document.getElementById('micBtn');
+        const camBtn = document.getElementById('camBtn');
+
+        let micEnabled = true;
+        let camEnabled = true;
+
+        micBtn.addEventListener('click', () => {
+            if (!window.localStream) return;
+
+            // Toggle audio tracks
+            window.localStream.getAudioTracks().forEach(track => {
+                track.enabled = !track.enabled;
+                micEnabled = track.enabled;
+            });
+
+            // Update button icon and style
+            micBtn.innerHTML = micEnabled
+                ? '<i class="fa-solid fa-microphone-lines"></i>'
+                : '<i class="fa-solid fa-microphone-slash"></i>';
+            micBtn.classList.toggle('off', !micEnabled);
+        });
+
+        camBtn.addEventListener('click', () => {
+            if (!window.localStream) return;
+
+            // Toggle video tracks
+            window.localStream.getVideoTracks().forEach(track => {
+                track.enabled = !track.enabled;
+                camEnabled = track.enabled;
+            });
+
+            // Update button icon and style
+            camBtn.innerHTML = camEnabled
+                ? '<i class="fa-solid fa-video"></i>'
+                : '<i class="fa-solid fa-video-slash"></i>';
+            camBtn.classList.toggle('off', !camEnabled);
+        });
+    </script>
+    
 </body>
 </html>
