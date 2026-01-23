@@ -76,7 +76,7 @@
     <header class="main-header">
         <div class="logo">SignConnect</div>
         <div class="menu-toggle">&#9776;</div>
-        
+
         <nav class="account-nav">
             <a href="index.php">Начало</a>
             <a class="active" href="meetings.php">Срещи</a>
@@ -90,19 +90,21 @@
 
             <div class="meeting-actions">
                 <div class="enter-meeting">
-                    <input type="text" id="meetingCodeInput" placeholder="Въведете код за присъединяване">
-                    <button onclick="joinMeeting()">Влез</button>
-                    <?php
-                        if ( isset( $_SESSION['errors_meeting'] ) ) {
+    <input type="text" id="meetingCodeInput" placeholder="Въведете код за присъединяване">
+    <button onclick="joinMeeting()">Влез</button>
 
-                            foreach( $_SESSION['errors_meeting'] as $error ) {
-                                echo "<div class='error'>". $error . "</div>";
+    <div class="error-holder">
+        <?php
+        if (isset($_SESSION['errors_meeting'])) {
+            foreach ($_SESSION['errors_meeting'] as $error) {
+                echo "<div class='error'>$error</div>";
+            }
+            unset($_SESSION['errors_meeting']);
+        }
+        ?>
+    </div>
+</div>
 
-                                unset( $_SESSION['errors_meeting'] );
-                            }
-                        }
-                    ?>
-                </div>
 
                 <div class="create-meeting">
                     <button class="new-meeting-btn"> 
@@ -187,7 +189,6 @@
 
         function joinMeeting() {
             const code = document.getElementById("meetingCodeInput").value.trim();
-            if (!code) return alert("Въведете код");
             window.location.href = "assets/action-files/join-meeting.php?code=" + code;
         }
     </script>

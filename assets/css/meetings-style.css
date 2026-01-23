@@ -65,6 +65,7 @@
     display: flex;
     gap: 10px;
     align-items: center;
+    position: relative;
 }
 
 .enter-meeting input {
@@ -255,6 +256,10 @@
         padding: 12px 14px;
     }
 
+    .enter-meeting {
+        margin-bottom: 20px;
+    }
+
     .enter-meeting button,
     .create-meeting .new-meeting-btn {
         padding: 14px 24px;
@@ -416,5 +421,22 @@
         height: 24px;
     }
 }
+
+
+/* ERRORS  */
+.error-holder {
+    position: absolute;
+    top: 100%;
+    left: 4px;
+    margin-top: 2px;
+    text-align: left;
+}
+
+.error {
+    color: #ff0000;
+    font-size: 13px;
+    font-weight: 500;
+}
+
 
 

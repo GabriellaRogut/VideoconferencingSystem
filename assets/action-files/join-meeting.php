@@ -14,6 +14,13 @@
     $stmt->execute([$code]);
     $meeting = $stmt->fetch();
 
+    if ($code == "") {
+        $errors_meeting[] = "Въведете код.";
+        $_SESSION['errors_meeting'] = $errors_meeting;
+        header("Location: ../../meetings.php");
+        exit;
+    }
+
     if (!$meeting) {
         $errors_meeting[] = "Невалиден вход.";
         $_SESSION['errors_meeting'] = $errors_meeting;
