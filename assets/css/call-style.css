@@ -131,7 +131,7 @@
 .video-card {
   position: relative;
   aspect-ratio: 16 / 9;
-  background: linear-gradient(145deg, #4c4c70, #3c3c5a);
+  /* background: linear-gradient(145deg, #4c4c70, #3c3c5a); */
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);

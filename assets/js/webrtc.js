@@ -1,29 +1,56 @@
 const localVideo = document.getElementById("localVideo");
-const remoteVideo = document.querySelector(".video-card video:not(#localVideo)");
+const remoteVideo = document.getElementById("remoteVideo");
 const localVideoCard = document.getElementById("localVideoCard");
 
 let localStream;
 let pc;
 
 const meetingCode = new URLSearchParams(window.location.search).get("code");
-const ws = new WebSocket("ws://localhost:3000");
+const ws = new WebSocket("wss://issac-unrescued-langston.ngrok-free.dev");
 
-const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+
+// const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
 
 // -----------------------------
 // Initialize media
 // -----------------------------
 async function initMedia() {
   try {
-    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    // IMPORTANT: предотвратява двойно взимане на камера/микрофон
+    if (localStream) return localStream;
+
+    localStream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+
     localVideo.srcObject = localStream;
 
     // Start speaking detection
     detectSpeaking(localStream, localVideoCard);
 
+    return localStream;
   } catch (err) {
     console.error("Error accessing media devices:", err);
     alert("Не може да се достъпи камерата или микрофона");
+    throw err;
+  }
+}
+
+// -----------------------------
+// ICE buffering helpers (FIX)
+// -----------------------------
+let pendingCandidates = [];
+
+async function flushCandidates() {
+  if (!pc) return;
+  if (!pc.remoteDescription || !pc.remoteDescription.type) return;
+
+  const toAdd = pendingCandidates;
+  pendingCandidates = [];
+
+  for (const c of toAdd) {
+    await pc.addIceCandidate(c).catch(console.error);
   }
 }
 
@@ -31,19 +58,75 @@ async function initMedia() {
 // Create PeerConnection
 // -----------------------------
 function createPeerConnection() {
-  pc = new RTCPeerConnection(config);
+  // Metered
+  pc = new RTCPeerConnection({
+  iceServers: [
+      {
+        urls: "stun:stun.l.google.com:19302"
+      },
+      {
+        urls: "turn:global.relay.metered.ca:80",
+        username: "6fc33b1992777f2fae3ed0dc",
+        credential: "yI+XPW6hE+yHfX0s",
+      },
+      {
+        urls: "turn:global.relay.metered.ca:80?transport=tcp",
+        username: "6fc33b1992777f2fae3ed0dc",
+        credential: "yI+XPW6hE+yHfX0s",
+      },
+      {
+        urls: "turn:global.relay.metered.ca:443",
+        username: "6fc33b1992777f2fae3ed0dc",
+        credential: "yI+XPW6hE+yHfX0s",
+      },
+      {
+        urls: "turns:global.relay.metered.ca:443?transport=tcp",
+        username: "6fc33b1992777f2fae3ed0dc",
+        credential: "yI+XPW6hE+yHfX0s",
+      },
+  ],
+});
 
-  pc.onicecandidate = (e) => {
-    if (e.candidate) {
-      ws.send(JSON.stringify({ type: "ice", candidate: e.candidate }));
-    }
-  };
+  // Debug
+  pc.onsignalingstatechange = () => console.log("sig:", pc.signalingState);
+  pc.oniceconnectionstatechange = () => console.log("ice:", pc.iceConnectionState);
+  pc.onconnectionstatechange = () => console.log("conn:", pc.connectionState);
+
+pc.onicecandidate = (e) => {
+  if (e.candidate) {
+    console.log("SEND ICE:", e.candidate.candidate);
+    ws.send(JSON.stringify({ type: "ice", candidate: e.candidate }));
+  } else {
+    console.log("ICE gathering complete");
+  }
+};
 
   pc.ontrack = (e) => {
+    console.log("ONTRACK kind:", e.track.kind, "muted:", e.track.muted, "state:", e.track.readyState);
+    console.log(
+      "Stream tracks:",
+      e.streams[0].getTracks().map((t) => ({
+        kind: t.kind,
+        enabled: t.enabled,
+        muted: t.muted,
+        state: t.readyState,
+      }))
+    );
+
     remoteVideo.srcObject = e.streams[0];
+
+    remoteVideo.muted = true;
+    remoteVideo.playsInline = true;
+    remoteVideo.autoplay = true;
+
+    remoteVideo.onloadedmetadata = () => {
+      console.log("remote size:", remoteVideo.videoWidth, remoteVideo.videoHeight);
+      remoteVideo.play().catch((err) => console.warn("remote play() blocked:", err));
+    };
   };
 
-  localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+  // Add local tracks
+  localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
 }
 
 // -----------------------------
@@ -51,44 +134,56 @@ function createPeerConnection() {
 // -----------------------------
 async function startCall() {
   createPeerConnection();
+
   const offer = await pc.createOffer();
   await pc.setLocalDescription(offer);
+
   ws.send(JSON.stringify({ type: "offer", offer }));
 }
 
 // -----------------------------
 // Handle WebSocket messages
 // -----------------------------
-ws.onopen = () => {
+ws.onopen = async () => {
+  await initMedia();
   ws.send(JSON.stringify({ type: "join", code: meetingCode }));
 };
 
 ws.onmessage = async (msg) => {
   const data = JSON.parse(msg.data);
 
-  if (!pc && data.type === "offer") {
-    createPeerConnection();
+  if (data.type === "start-call") {
+    if (!localStream) await initMedia();
+    if (!pc) await startCall();
+  }
+
+  if (data.type === "offer") {
+    if (!localStream) await initMedia();
+    if (!pc) createPeerConnection();
+
     await pc.setRemoteDescription(data.offer);
+    await flushCandidates();
+
     const answer = await pc.createAnswer();
     await pc.setLocalDescription(answer);
+
     ws.send(JSON.stringify({ type: "answer", answer }));
   }
 
-  if (data.type === "answer" && pc) {
+  if (data.type === "answer") {
+    if (!pc) return;
+
     await pc.setRemoteDescription(data.answer);
+    await flushCandidates();
   }
 
-  if (data.type === "ice" && pc) {
-    try {
-      await pc.addIceCandidate(data.candidate);
-    } catch (err) {
-      console.error("Error adding ICE candidate:", err);
-    }
-  }
 
-  // If second user joined first, we start the call
-  if (data.type === "start-call") {
-    if (!pc) startCall();
+  if (data.type === "ice") {
+    const candidate = new RTCIceCandidate(data.candidate);
+    pendingCandidates.push(candidate);
+	
+	console.log("RECV ICE:", data.candidate?.candidate);
+    await flushCandidates();
   }
 };
 
@@ -138,6 +233,6 @@ function detectSpeaking(stream, videoCardEl) {
 }
 
 // -----------------------------
-// Initialize
+// Initialize (optional local preview)
 // -----------------------------
-initMedia();
+initMedia().catch(() => {});

@@ -9,9 +9,16 @@ wss.on("connection", (ws) => {
   let meetingCode = null;
 
   ws.on("message", (msg) => {
-    const data = JSON.parse(msg);
 
-    // First message: join meeting
+      let data;
+      try {
+        data = JSON.parse(msg.toString());
+      } catch (e) {
+        console.error("Bad JSON:", msg.toString());
+        return;
+      }
+
+      // First message: join meeting
     if (data.type === "join") {
       meetingCode = data.code;
 
@@ -20,13 +27,13 @@ wss.on("connection", (ws) => {
       console.log(`User joined meeting ${meetingCode}`);
 
       // If 2 participants are in the meeting, tell them to start the call
-      if (meetings[meetingCode].length >= 2) {
-        meetings[meetingCode].forEach(client => {
-          if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({ type: "start-call" }));
-          }
-        });
+    if (meetings[meetingCode].length === 2) {
+      const first = meetings[meetingCode][0]; // първият (host)
+      if (first.readyState === WebSocket.OPEN) {
+        first.send(JSON.stringify({ type: "start-call" }));
       }
+    }
+
 
       return;
     }

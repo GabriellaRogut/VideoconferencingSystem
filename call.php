@@ -99,47 +99,25 @@
       <!-- Video Grid -->
       <section class="video-area">
         <div class="video-grid">
+          <!-- local once -->
+          <div class="video-card" id="localVideoCard">
+            <video id="localVideo" autoplay muted playsinline></video>
+            <div class="username-bubble"><i class="fa-solid fa-user"></i> Вие</div>
+          </div>
 
-        <?php foreach ($participants as $p){ ?>
+          <!-- remote others -->
+          <?php foreach ($participants as $p){ ?>
+            <?php if ($p['username'] === $local_username) continue; ?>
+            <div class="video-card">
+              <video class="remoteVideo" id="remoteVideo" autoplay playsinline></video>
+              <div class="username-bubble"><i class="fa-solid fa-user"></i> <?= htmlspecialchars($p['username']) ?></div>
 
-          <!-- LOCAL VIDEO -->
-          <?php 
-            if($p['role'] == "host"){ 
-          ?>
-              <div class="video-card" id="localVideoCard">
-                <video id="localVideo" autoplay muted playsinline></video>
-                <div class="username-bubble">
-                  <i class="fa-solid fa-user"></i> Вие
-                </div>
-              </div>
-
-          <?php 
-            } else { 
-          ?>
-
-          <!-- REMOTE VIDEO -->
-          <?php 
-            if ($p['username'] !== $local_username){ 
-          ?>
-              <div class="video-card">
-                <video autoplay playsinline></video>
-                <div class="username-bubble">
-                  <i class="fa-solid fa-user"></i> <?= htmlspecialchars($p['username']) ?>
-                </div>
-
-                <div class="subtitle speech-subtitle active">Това са примерни субтитри за говор.</div>
-                <div class="subtitle sign-subtitle">Това са примерни субтитри за жестомимичен език.</div>
-              </div>
-          <?php 
-            } 
-          ?>
-        <?php 
-          } 
-        ?>
-
+              <div class="subtitle speech-subtitle active">Това са примерни субтитри за говор.</div> 
+              <div class="subtitle sign-subtitle">Това са примерни субтитри за жестомимичен език.</div>
+            </div>
           <?php } ?>
+      </div>
 
-        </div>
       </section>
 
 
@@ -393,7 +371,7 @@
   </script>
 
 
-  <script src="assets/js/webrtc.js"></script>
+  <script src="assets/js/webrtc.js?v=3"></script>
 
 </body>
 </html>
