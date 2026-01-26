@@ -11,7 +11,7 @@
 
   // Fetch user info
   $stmt = $connection->prepare("
-      SELECT username, profile_photo 
+      SELECT username, profile_photo, role
       FROM users 
       WHERE id = ?
   ");
@@ -55,7 +55,6 @@
   $stmt->execute([$meeting['id']]);
   $participants = $stmt->fetchAll();
 
-  // Local user name
   // $local_username = $_SESSION['username'];
 ?>
 
@@ -172,28 +171,177 @@
             <div class="dropdown-menu" id="chatMenu">
               <div class="menu-item" id="clearChat">Clear Chat</div>
               <div class="menu-item" id="stopChat">Stop Chat</div>
+              <?php if ($p['role'] === 'host') { ?>
+                <div class="menu-item" id="deleteChat">Delete Chat</div>
+               <?php } ?>
             </div>
           </div>
         </div>
 
-        <div class="msg">
-          <p class="name">Мария Стоянова</p>
-          <p>Добър ден!</p>
-        </div>
-
-        <div class="msg me">
-          <p class="name">Вие</p>
-          <p>Чувате ли ме?</p>
-        </div>
+        <div class="msg-container" id="msgContainer"></div>
 
         <div class="input-wrapper">
-          <input type="text" class="msg-input" placeholder="Съобщение...">
-          <button class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+          <input type="text" id="msgInput" class="msg-input" placeholder="Съобщение...">
+          <button id="sendBtn" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
       </section>
 
+
     </aside>
   </div>
+
+  <!-- CHAT -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const meetingCode = "<?= htmlspecialchars($meeting['code'], ENT_QUOTES) ?>";
+      const localUserId = <?= (int)$userID ?>;
+
+      const msgContainer = document.getElementById("msgContainer");
+      const msgInput = document.getElementById("msgInput");
+      const sendBtn = document.getElementById("sendBtn");
+
+      if (!sendBtn || !msgInput || !msgContainer) return;
+
+      let lastId = 0;
+      let isFetching = false;
+
+      function escapeHtml(str) {
+        return String(str)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function renderMessage(m) {
+        const wrap = document.createElement("div");
+        wrap.className = "msg" + (Number(m.user_id) === Number(localUserId) ? " me" : "");
+
+        const nameEl = document.createElement("div");
+        nameEl.className = "name";
+        nameEl.textContent = m.name ?? "User";
+
+        const textEl = document.createElement("div");
+        textEl.className = "text";
+        textEl.innerHTML = escapeHtml(m.message ?? "");
+
+        wrap.appendChild(nameEl);
+        wrap.appendChild(textEl);
+        msgContainer.appendChild(wrap);
+      }
+
+      function scrollToBottom() {
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+      }
+
+      async function fetchMessages() {
+        if (isFetching) return;
+        isFetching = true;
+
+        try {
+          const url = `assets/action-files/fetch-chat.php?code=${encodeURIComponent(meetingCode)}&last_id=${lastId}`;
+          const res = await fetch(url, { cache: "no-store", credentials: "same-origin" });
+          if (!res.ok) return;
+
+          const data = await res.json();
+          if (!Array.isArray(data)) return;
+
+          let gotNew = false;
+          for (const m of data) {
+            renderMessage(m);
+            if (m.id && Number(m.id) > lastId) lastId = Number(m.id);
+            gotNew = true;
+          }
+          if (gotNew) scrollToBottom();
+        } catch (e) {
+          console.error(e);
+        } finally {
+          isFetching = false;
+        }
+      }
+
+      async function sendMessage() {
+        const text = msgInput.value.trim();
+        if (!text) return;
+
+        try {
+          const form = new FormData();
+          form.append("code", meetingCode);
+          form.append("message", text);
+
+          const res = await fetch("assets/action-files/send-chat.php", {
+            method: "POST",
+            body: form,
+            credentials: "same-origin",
+            cache: "no-store"
+          });
+
+          const data = await res.json();
+          if (data.status !== "success") return;
+
+          msgInput.value = "";
+          fetchMessages();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // Send events
+      sendBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        sendMessage();
+      });
+
+      msgInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+
+      // CLEAR CHAT (UI only)
+      const clearChatBtn = document.getElementById("clearChat");
+      if (clearChatBtn) {
+        clearChatBtn.addEventListener("click", () => {
+          msgContainer.innerHTML = "";
+        });
+      }
+
+      // DELETE CHAT (DB) - host
+      const deleteChatBtn = document.getElementById("deleteChat");
+      if (deleteChatBtn) {
+        deleteChatBtn.addEventListener("click", async () => {
+          try {
+            const form = new FormData();
+            form.append("code", meetingCode);
+
+            const res = await fetch("assets/action-files/delete-chat.php", {
+              method: "POST",
+              body: form,
+              credentials: "same-origin",
+              cache: "no-store"
+            });
+
+            const data = await res.json();
+            if (data.status !== "success") {
+              alert(data.message || "Could not delete chat");
+              return;
+            }
+
+            msgContainer.innerHTML = "";
+            lastId = 0;
+          } catch (e) {
+            console.error(e);
+            alert("Network error while deleting chat");
+          }
+        });
+      }
+
+      fetchMessages();
+      setInterval(fetchMessages, 1000);
+    });
+  </script>
 
 
   <!-- CHAT MENU -->
