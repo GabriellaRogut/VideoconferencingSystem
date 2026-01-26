@@ -139,6 +139,114 @@ body {
   color: var(--color-primary);
 }
 
+/* SHARE OPINION SECTION */
+.share-opinion {
+  background: var(--color-white);
+  padding: 5rem 10%;
+  position: relative;
+}
+
+/* Inner decorative border */
+.share-opinion::after {
+  content: "";
+  position: absolute;
+  inset: 22px;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-image: var(--gradient-bg) 1;
+  pointer-events: none;
+  border-radius: 0.5rem;
+}
+
+.opinion-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.opinion-text h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.opinion-text p {
+  color: var(--color-muted);
+  font-size: 1.05rem;
+}
+
+.opinion-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.opinion-form textarea {
+  color: var(--color-text);
+  width: 100%;
+  min-height: 120px;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background: var(--color-white);
+  resize: none;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.opinion-form input {
+  color: var(--color-text);
+  width: 100%;
+  min-height: 20px;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background: var(--color-white);
+  resize: none;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.opinion-form textarea:focus, .opinion-form input:focus  {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(45, 91, 227, 0.1);
+}
+
+.opinion-form button {
+  align-self: flex-start;
+  padding: 0.8rem 2rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.opinion-form button:hover {
+  background: var(--color-primary-light);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .opinion-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .opinion-form button {
+    align-self: center;
+  }
+}
+
+
 /* JOIN SECTION */
 .join-section {
   text-align: center; 
@@ -203,6 +311,10 @@ body {
   position: relative; 
   transform: scale(1);
   box-sizing: border-box;
+}
+
+.admin-title {
+  font-size: 22px !important;
 }
 
 @media (max-width: 480px) {

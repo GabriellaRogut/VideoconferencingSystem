@@ -204,6 +204,7 @@ footer {
 .error {
     color: #a11919 !important;
     font-size: 13px;
+    margin-top: 5px;
 }
 
 /* ADMIN */

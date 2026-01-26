@@ -1,4 +1,12 @@
-<?php include_once("../includes/connection.php") ?>
+<?php
+    include_once("../includes/connection.php");
+
+    if (!isset($_SESSION['is_admin'])) {
+
+        header("Location: ../index.php");
+        exit;
+    }
+?>
 
 <?php
     // Fetch users
@@ -12,10 +20,17 @@
 ?>
 
 
-<!-- WELCOME ADMIN MESSAGE HERE -->
+<!-- WELCOME ADMIN MESSAGE -->
+<?php if (isset($_SESSION['admin_welcome'])){ ?>
+    <div id="adminWelcome" class="admin-welcome">
+       🛡️ Добре дошли в администраторския панел!
+    </div>
+    <?php unset($_SESSION['admin_welcome']); ?>
+<?php } ?>
+
 
 <!DOCTYPE html>
-<html lang="bg" theme="dark-mode">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,8 +54,9 @@
         </div>
 
         <nav>
-            <a href="" class="account-btn leave-btn"><i class="fa-solid fa-right-from-bracket"></i></a> <!-- logout -->
-            <a href="admin-account.php"><i class="fa-solid fa-user account-btn"></i></a>
+            <a href="../assets/action-files/logout.php" class="account-btn leave-btn"><i class="fa-solid fa-right-from-bracket"></i></a>
+            <a href="../admin-panel/admin.php" class="admin-btn"><i class="fa-solid fa-toolbox account-btn"></i></a>
+            <a href="admin-account.php"><i class="fa-solid fa-user-tie account-btn"></i></a>
         </nav>
     </header>
 
@@ -185,78 +201,86 @@
     </script>
 
     
-<script>
-    window.onload = function () {
+    <script>
+        window.onload = function () {
 
-    var chart = new CanvasJS.Chart("chartContainer", {
-        animationEnabled: true,
-        backgroundColor: 'transparent',
-        data: [{
-            type: "doughnut",
-            startAngle: 60,
-            indexLabelFontSize: 17,
-            indexLabel: "{label} - #percent%",
-            toolTipContent: "<b>{label}:</b> {y} (#percent%)",
-            dataPoints: [
-                { y: 67, label: "Hearing problems" },
-                { y: 28, label: "No hearing problems" },
-            ]
-        }]
-    });
-    chart.render();}
-</script>
-
-
-<script>
-    const modal = document.getElementById("editModal");
-    const cancelBtn = document.querySelector(".modal-cancel");
-
-    document.querySelectorAll(".upd-btn").forEach(btn => {
-        btn.addEventListener("click", e => {
-            const row = e.target.closest("tr");
-
-            document.getElementById("editUserId").value = row.children[0].innerText;
-            document.getElementById("editUsername").value = row.children[1].innerText;
-            document.getElementById("editEmail").value = row.children[2].innerText;
-            document.getElementById("editRole").value = row.querySelector(".role").classList.contains("admin") ? "admin" : "user";
-
-            modal.classList.add("active");
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            backgroundColor: 'transparent',
+            data: [{
+                type: "doughnut",
+                startAngle: 60,
+                indexLabelFontSize: 17,
+                indexLabel: "{label} - #percent%",
+                toolTipContent: "<b>{label}:</b> {y} (#percent%)",
+                dataPoints: [
+                    { y: 67, label: "Hearing problems" },
+                    { y: 28, label: "No hearing problems" },
+                ]
+            }]
         });
-    });
-
-    cancelBtn.addEventListener("click", () => {
-        modal.classList.remove("active");
-    });
-
-    modal.addEventListener("click", e => {
-        if (e.target === modal) modal.classList.remove("active");
-    });
-</script>
+        chart.render();}
+    </script>
 
 
-<script>
-    const deleteModal = document.getElementById("deleteModal");
-    let deleteUserId = null;
+    <script>
+        const modal = document.getElementById("editModal");
+        const cancelBtn = document.querySelector(".modal-cancel");
 
-    document.querySelectorAll(".del-btn").forEach(btn => {
-        btn.addEventListener("click", e => {
-            const row = e.target.closest("tr");
-            deleteUserId = row.children[0].innerText;
-            deleteModal.classList.add("active");
+        document.querySelectorAll(".upd-btn").forEach(btn => {
+            btn.addEventListener("click", e => {
+                const row = e.target.closest("tr");
+
+                document.getElementById("editUserId").value = row.children[0].innerText;
+                document.getElementById("editUsername").value = row.children[1].innerText;
+                document.getElementById("editEmail").value = row.children[2].innerText;
+                document.getElementById("editRole").value = row.querySelector(".role").classList.contains("admin") ? "admin" : "user";
+
+                modal.classList.add("active");
+            });
         });
-    });
 
-    document.getElementById("cancelDelete").addEventListener("click", () => {
-        deleteModal.classList.remove("active");
-        deleteUserId = null;
-    });
+        cancelBtn.addEventListener("click", () => {
+            modal.classList.remove("active");
+        });
 
-    document.getElementById("confirmDelete").addEventListener("click", () => {
-        // later you will connect this to PHP / AJAX
-        alert("Потребител с ID " + deleteUserId + " ще бъде изтрит.");
-        deleteModal.classList.remove("active");
-    });
-</script>
+        modal.addEventListener("click", e => {
+            if (e.target === modal) modal.classList.remove("active");
+        });
+    </script>
+
+
+    <script>
+        const deleteModal = document.getElementById("deleteModal");
+        let deleteUserId = null;
+
+        document.querySelectorAll(".del-btn").forEach(btn => {
+            btn.addEventListener("click", e => {
+                const row = e.target.closest("tr");
+                deleteUserId = row.children[0].innerText;
+                deleteModal.classList.add("active");
+            });
+        });
+
+        document.getElementById("cancelDelete").addEventListener("click", () => {
+            deleteModal.classList.remove("active");
+            deleteUserId = null;
+        });
+
+        document.getElementById("confirmDelete").addEventListener("click", () => {
+            // alert("Потребител с ID " + deleteUserId + " ще бъде изтрит.");
+            deleteModal.classList.remove("active");
+        });
+    </script>
+
+
+    <!-- Welcome message -->
+    <script>
+        setTimeout(() => {
+            const msg = document.getElementById("adminWelcome");
+            if (msg) msg.remove();
+        }, 2000);
+    </script>
 
 
 

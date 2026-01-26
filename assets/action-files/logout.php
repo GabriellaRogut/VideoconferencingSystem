@@ -1,11 +1,10 @@
 <?php
     session_start();
+    session_unset();
+    session_destroy();
 
-    // Set flash message before destroying session data
+    session_start();
     $_SESSION['logout_success'] = "Успешно излязохте от акаунта.";
-
-    // Destroy user-specific session variables, not the whole session
-    unset($_SESSION['user_id']);
 
     header("Location: ../../index.php");
     exit;

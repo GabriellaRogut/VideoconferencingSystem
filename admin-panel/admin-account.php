@@ -1,0 +1,257 @@
+<?php 
+    include_once("../includes/connection.php"); 
+
+    // Check if user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: ../index.php");
+        exit;
+    }
+
+    // user info
+    $userID = $_SESSION['user_id'];
+    $stmt = $connection->prepare("
+        SELECT * 
+        FROM users 
+        WHERE id = ?
+    ");
+    $stmt->execute([$userID]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        header("Location: ../index.php");
+        exit;
+    }
+?>
+
+
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignConnect | Профил</title>
+
+    <?php include("../includes/links.php"); ?>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/css/account-style.css?v=2">
+    <link rel="stylesheet" href="../assets/css/general.css">
+    <link rel="stylesheet" href="../assets/css/admin-styles.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="logo-wrap">
+            <span class="logo">SignConnect</span>
+            <span class="admin-badge">ADMIN</span>
+        </div>
+
+        <nav>
+            <a href="../assets/action-files/logout.php" class="account-btn leave-btn"><i class="fa-solid fa-right-from-bracket"></i></a>
+            <a href="../admin-panel/admin.php" class="admin-btn"><i class="fa-solid fa-toolbox account-btn"></i></a>
+            <a href="#"><i class="fa-solid fa-user-tie account-btn"></i></a>
+        </nav>
+    </header>
+
+    
+    <section class="account-container">
+
+        <!-- LEFT SIDE: Profile -->
+        <div class="profile-card acc-card">
+            <img src="../assets/images/<?= htmlspecialchars($user['profile_photo'] ?: 'default-pfp.png') ?>" class="profile-photo">
+
+
+            <h2><?= htmlspecialchars($user['username']) ?></h2>
+            <p class="email"><?= htmlspecialchars($user['email']) ?></p>
+
+            <button class="edit-btn">Редактирай профил</button>
+            <hr>
+
+            <p><strong>Роля:</strong> <?= ucfirst($user['role']) ?></p>
+            <p><strong>Администратор ID:</strong> <?= $user['id'] ?></p>
+        </div>
+
+        <!-- RIGHT SIDE: Account Settings -->
+        <div class="settings-card acc-card" id="view-account">
+            <div class="section-header">
+                <h2 class="section-title">Настройки</h2>
+                <div class="theme-toggle">
+                    <input type="checkbox" id="themeSwitch">
+                    <label for="themeSwitch" class="toggle-label">
+                        <span class="toggle-ball"></span>
+                        <i class="fa-solid fa-sun icon sun"></i>
+                        <i class="fa-solid fa-moon icon moon"></i>
+                    </label>
+                </div>
+            </div>
+
+
+            <form class="settings-form">
+                <div class="field">
+                    <label>Име:</label>
+                    <p class="view-fields"><?= htmlspecialchars($user['username']) ?></p>
+                </div>
+
+                <div class="field">
+                    <label>Имейл:</label>
+                    <p class="view-fields"><?= htmlspecialchars($user['email']) ?></p>
+                </div>
+
+                <div class="field">
+                    <label>Парола:</label>
+                    <p class="view-fields">•••••••</p>
+                </div>
+            </form>
+
+            <hr>
+
+            <div class="danger-container view-buttons">
+                <a href="../assets/action-files/logout.php" type="submit" class="danger-btn logout-btn">Изход</a>
+                <button class="danger-btn delete-btn open-delete-modal">Изтриване на акаунта</button>
+            </div>
+        </div>
+
+
+        <div class="settings-card acc-card" id="edit-account"  style="display:none;">
+        <!--  DISPLAY ERRORS !!! --> 
+
+            <h2 class="section-title">Настройки на Акаунта</h2>
+
+            <form class="settings-form" method="POST" action="../assets/action-files/edit-account.php" enctype="multipart/form-data">
+                <div class="field">
+                    <label>Профилна снимка:</label>
+                    <input type="file" name="profile_photo" accept="image/*">
+                    <?php 
+                        if($user['profile_photo'] && $user['profile_photo'] != 'default-pfp.png') { 
+                    ?>
+                            <img src="assets/images/<?= htmlspecialchars($user['profile_photo']) ?>" class="edit-photo-preview">
+                    <?php 
+                        } 
+                    ?>
+                </div>
+
+                <div class="field">
+                    <label>Име:</label>
+                    <input type="text" name="username" value="<?= $user['username'] ?>">
+                </div>
+
+                <div class="field">
+                    <label>Имейл:</label>
+                    <input type="email" name="email" value="<?= $user['email'] ?>">
+                </div>
+
+                <div class="field">
+                    <label>Парола:</label>
+                    <input type="password" name="current_password" placeholder="•••••••">
+                </div>
+
+                <div class="field">
+                    <label>Нова парола:</label>
+                    <input type="password" name="new_password" placeholder="•••••••">
+                </div>
+
+                <div class="field">
+                    <label>Потвърди паролата:</label>
+                    <input type="password" name="confirm_password" placeholder="•••••••">
+                </div>
+
+                <div class="btn-div">
+                    <button class="save-btn" type="submit" name="update_account">Запази промените</button>
+                    <button class="cancel-btn" type="button">Назад</button>
+                </div>
+            </form>
+            <?php
+                if ( isset( $_SESSION['edit_errors']) ) {
+
+                    foreach( $_SESSION['edit_errors'] as $error ) {
+                        echo "<div class='error'>". $error . "</div>";
+                    }
+                    unset( $_SESSION['edit_errors'] );
+                }
+            ?>
+
+            <hr style="margin: 20px;">
+
+            <div class="danger-container edit-buttons">
+                <a href="../assets/action-files/logout.php" type="submit" class="danger-btn logout-btn">Изход</a>
+                <button class="danger-btn delete-btn open-delete-modal">Изтриване на акаунта</button>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+        © 2025 SignConnect. Всички права запазени.
+    </footer>
+
+
+    <!-- DELETE ACCOUNT MODAL -->
+    <div id="deleteModal" class="del-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Сигурни ли сте, че искате да изтриете профила си?</h2>
+            <p>
+                Всички данни, свързани с този акаунт, ще бъдат изтрити и не подлежат на възобновяване. 
+                Това включва лична информация, история на срещи и други свързани записи.
+            </p>
+            <div class="modal-buttons">
+                <form method="POST" action="../assets/action-files/delete-account.php">
+                    <button type="submit" class="danger-btn">Да, изтрий</button>
+                </form>
+                <button class="cancel-btn modal-cancel">Не</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<!-- Edit account -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const editBtn = document.querySelector(".edit-btn");
+        const cancelBtn = document.querySelector(".cancel-btn");
+        const viewDiv = document.getElementById("view-account");
+        const editDiv = document.getElementById("edit-account");
+
+        // open edit mode
+        editBtn.addEventListener("click", () => {
+            viewDiv.style.display = "none";
+            editDiv.style.display = "block";
+        });
+
+        // cancel 
+        cancelBtn.addEventListener("click", () => {
+            editDiv.style.display = "none";
+            viewDiv.style.display = "block";
+        });
+    });
+</script>
+
+
+<!-- Change theme modal -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const themeSwitch = document.getElementById("themeSwitch");
+
+        // Load saved theme from localStorage
+        if (localStorage.getItem("theme") === "dark") {
+            document.documentElement.classList.add("dark-mode"); 
+            themeSwitch.checked = true;
+        }
+
+        // Toggle theme on change
+        themeSwitch.addEventListener("change", () => {
+            if (themeSwitch.checked) {
+                document.documentElement.classList.add("dark-mode"); 
+                localStorage.setItem("theme", "dark");
+            } else {
+                document.documentElement.classList.remove("dark-mode"); 
+                localStorage.setItem("theme", "light");
+            }
+        });
+    });
+</script>
+
