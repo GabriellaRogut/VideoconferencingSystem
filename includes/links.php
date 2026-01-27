@@ -15,3 +15,32 @@
 
 <!-- Favicon -->
 <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+
+
+<!-- ADMIN MODAL -->
+     <div class="modal-overlay <?php if (isset( $_SESSION['errors_admin']) ) echo " active" ?>" id="adminModal">
+        <div class="modal">
+            <span class="close" id="closeAdminModal">&times;</span>
+            <h3 class="admin-title">Оторизиран достъп</h3>
+            <p style="color: var(--color-muted); margin-bottom:1rem;">
+                Само администратори могат да влязат в системния панел.
+            </p>
+
+            <form method="POST" action="admin-panel/admin-login.php" class="modal-form <?php if (isset( $_SESSION['errors_admin']) ) echo " active-form" ?>" id="modalForm">
+                <input type="email" name="admin_email" placeholder="Имейл" required>
+                <input type="password" name="admin_password" placeholder="Парола" required>
+                <button type="submit" name="admin_login">Вход в системата</button>
+
+                <?php
+                    if (isset( $_SESSION['errors_admin'] ) ) {
+
+                        foreach( $_SESSION['errors_admin'] as $error ) {
+                            echo "<div class='error'>". $error . "</div>";
+
+                            unset( $_SESSION['errors_admin'] );
+                        }
+                    }
+                ?>
+            </form>
+        </div>
+    </div>

@@ -54,8 +54,6 @@
   ");
   $stmt->execute([$meeting['id']]);
   $participants = $stmt->fetchAll();
-
-  // $local_username = $_SESSION['username'];
 ?>
 
 
@@ -169,10 +167,10 @@
           <div class="menu-wrapper">
             <i class="fa-solid fa-ellipsis-vertical chat-options"></i>
             <div class="dropdown-menu" id="chatMenu">
-              <div class="menu-item" id="clearChat">Clear Chat</div>
-              <div class="menu-item" id="stopChat">Stop Chat</div>
+              <div class="menu-item" id="clearChat">Изтрий за мен</div>
+              <div class="menu-item" id="stopChat">Спиране</div>
               <?php if ($p['role'] === 'host') { ?>
-                <div class="menu-item" id="deleteChat">Delete Chat</div>
+                <div class="menu-item" id="deleteChat">Изтрий за всички</div>
                <?php } ?>
             </div>
           </div>
@@ -181,6 +179,9 @@
         <div class="msg-container" id="msgContainer"></div>
 
         <div class="input-wrapper">
+          <div class="chat-system-msg" style="display: none;"><p></p></div>
+          
+
           <input type="text" id="msgInput" class="msg-input" placeholder="Съобщение...">
           <button id="sendBtn" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
@@ -190,21 +191,25 @@
     </aside>
   </div>
 
+
   <!-- CHAT -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const meetingCode = "<?= htmlspecialchars($meeting['code'], ENT_QUOTES) ?>";
+      const meetingCode = "<?= $meeting['code'] ?>";
       const localUserId = <?= (int)$userID ?>;
 
       const msgContainer = document.getElementById("msgContainer");
       const msgInput = document.getElementById("msgInput");
       const sendBtn = document.getElementById("sendBtn");
 
+      const systemMessage = document.querySelector(".chat-system-msg")
+
       if (!sendBtn || !msgInput || !msgContainer) return;
 
       let lastId = 0;
       let isFetching = false;
 
+      // security
       function escapeHtml(str) {
         return String(str)
           .replaceAll("&", "&amp;")
@@ -214,13 +219,41 @@
           .replaceAll("'", "&#039;");
       }
 
+
+
+      // system messages
+      function showSystemMessage(html, isViolated = false) {
+        systemMessage.style.display = "block";
+        systemMessage.innerHTML = html;
+        systemMessage.classList.remove("chat-system-msg-violated");
+
+        if (isViolated == true) {
+          systemMessage.classList.add("chat-system-msg-violated");
+        }
+
+        setTimeout(() => {
+          systemMessage.style.display = "none";
+        }, 3000);
+      }
+
+
+
+      function scrollToBottom() {
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+      }
+
+
+
+      // displaying message
       function renderMessage(m) {
         const wrap = document.createElement("div");
         wrap.className = "msg" + (Number(m.user_id) === Number(localUserId) ? " me" : "");
 
         const nameEl = document.createElement("div");
         nameEl.className = "name";
-        nameEl.textContent = m.name ?? "User";
+
+        // Show "Вие" for local user, else show username
+        nameEl.textContent = Number(m.user_id) === Number(localUserId) ? "Вие" : (m.name ?? "User");
 
         const textEl = document.createElement("div");
         textEl.className = "text";
@@ -231,10 +264,8 @@
         msgContainer.appendChild(wrap);
       }
 
-      function scrollToBottom() {
-        msgContainer.scrollTop = msgContainer.scrollHeight;
-      }
 
+      // fetch messages
       async function fetchMessages() {
         if (isFetching) return;
         isFetching = true;
@@ -261,9 +292,17 @@
         }
       }
 
+
+      // send messages
       async function sendMessage() {
         const text = msgInput.value.trim();
         if (!text) return;
+
+        // check for banned words
+        if (containsBannedWord(text)) {
+          showSystemMessage(`<p><i class="fa-solid fa-triangle-exclamation"></i> Открито е съдържание, което не отговаря на <a href="policy.php">Политиката за ползване</a> на платформата</p>`, true);
+          return; // stop sending
+        }
 
         try {
           const form = new FormData();
@@ -287,26 +326,18 @@
         }
       }
 
-      // Send events
-      sendBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        sendMessage();
-      });
 
-      msgInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          sendMessage();
-        }
-      });
 
       // CLEAR CHAT (UI only)
       const clearChatBtn = document.getElementById("clearChat");
       if (clearChatBtn) {
         clearChatBtn.addEventListener("click", () => {
           msgContainer.innerHTML = "";
+          showSystemMessage(`<p><i class="fa-solid fa-broom"></i> Чатът беше изчистен успешно.</p>`);
         });
       }
+
+
 
       // DELETE CHAT (DB) - host
       const deleteChatBtn = document.getElementById("deleteChat");
@@ -330,6 +361,7 @@
             }
 
             msgContainer.innerHTML = "";
+            showSystemMessage(`<p><i class="fa-solid fa-eraser"></i> Чатът беше успешно изтрит от хоста.</p>`);
             lastId = 0;
           } catch (e) {
             console.error(e);
@@ -338,10 +370,66 @@
         });
       }
 
+
+
+      // STOP CHAT
+      let chatStopped = false;
+      const stopChatBtn = document.getElementById("stopChat");
+
+      // update button label
+      function updateStopChatButton() {
+        stopChatBtn.textContent = chatStopped ? "Пускане" : "Спиране";
+      }
+
+      // chat on/off
+      function toggleChat() {
+        chatStopped = !chatStopped;
+
+        msgInput.disabled = chatStopped;
+        sendBtn.disabled = chatStopped;
+        msgInput.placeholder = chatStopped ? "Чатът е спрян от хоста." : "Съобщение...";
+
+        if (chatStopped) {
+          showSystemMessage(`<i class="fa-solid fa-ban"></i> Чатът беше спрян от хоста.`);
+        } else {
+          systemMessage.style.display = "none";
+        }
+        updateStopChatButton();
+      }
+      stopChatBtn.addEventListener("click", toggleChat);
+      updateStopChatButton();
+
+
+      // Sending messages automatically respects disabled state
+      sendBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (!msgInput.disabled && msgInput.value.trim()) sendMessage();
+      });
+
+      msgInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !msgInput.disabled) {
+          e.preventDefault();
+          if (msgInput.value.trim()) sendMessage();
+        }
+      });
+
+
+
+      // VIOLATION CHECK
+      // banned words list
+      const bannedWords = ["лошадума", "многолошадума"];
+
+      function containsBannedWord(text) {
+        const lowerText = text.toLowerCase();
+        return bannedWords.some(word => lowerText.includes(word.toLowerCase()));
+      }
+
+
       fetchMessages();
       setInterval(fetchMessages, 1000);
     });
   </script>
+
 
 
   <!-- CHAT MENU -->
@@ -357,6 +445,7 @@
       if (!e.target.closest(".menu-wrapper")) menu.style.display = "none";
     });
   </script>
+
 
 
   <!-- MIC & CAMERA CONTROLS -->
@@ -401,11 +490,12 @@
   </script>
 
 
+
   <!-- SIDEBAR CONTROL  -->
   <script>
     const toggleBtn = document.createElement("div");
     toggleBtn.classList.add("sidebar-toggle");
-    toggleBtn.innerHTML = "&#9654;"; // right arrow
+    toggleBtn.innerHTML = "&#9654;"; // arrow
     document.body.appendChild(toggleBtn);
 
     const rightSidebar = document.querySelector(".right-sidebar");
@@ -442,6 +532,7 @@
   </script>
 
 
+
   <!-- END MEETING REDIRECT (CHECK STATUS) -->
   <script>
     setInterval(() => {
@@ -455,6 +546,8 @@
     }, 5000); 
   </script>
 
+
+
   <!-- LEAVE MEETING -->
   <script>
     function leaveMeeting() {
@@ -463,19 +556,20 @@
     }
   </script>
 
-  <!-- Copy Code (add participant) -->
+
+
+  <!-- COPY CODE (add participant) -->
   <script>
   document.querySelector(".copy-code-btn").addEventListener("click", function () {
       const code = this.dataset.code;
 
       navigator.clipboard.writeText(code).then(() => {
-          // Change tooltip text temporarily
           const el = this;
           el.setAttribute("data-original", el.getAttribute("data-code"));
 
           el.style.setProperty('--tooltip-text', '"Кодът е копиран!"');
 
-          // Quick visual feedback
+          // visual feedback
           el.style.transform = "scale(1.2)";
           setTimeout(() => el.style.transform = "scale(1)", 200);
 

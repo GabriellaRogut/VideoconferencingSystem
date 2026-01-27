@@ -191,7 +191,7 @@
 
     <footer>
         © 2025 SignConnect. Всички права запазени.
-        <a href="admin-panel/admin.php" class="admin-entry">System</a>
+        <a href="admin-panel/admin.php" class="admin-entry" id="openAdminModal">System</a>
     </footer>
 
 

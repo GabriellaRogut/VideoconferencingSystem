@@ -32,3 +32,28 @@ if (cards) {
     cards.forEach(card=>observer.observe(card));
 }
   
+
+// ADMIN MODAL
+const openAdminBtn = document.getElementById("openAdminModal");
+const adminModal = document.getElementById("adminModal");
+const closeAdminModal = document.getElementById("closeAdminModal");
+const modalForm = document.getElementById("modalForm");
+
+openAdminBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    adminModal.classList.add("active");
+    modalForm.classList.add('active-form');
+});
+
+closeAdminModal.addEventListener("click", () => {
+    adminModal.classList.remove("active");
+    modalForm.classList.remove('active-form');
+});
+
+// Close on background click
+adminModal.addEventListener("click", (e) => {
+    if (e.target === adminModal) {
+        adminModal.classList.remove("active");
+        modalForm.classList.remove('active-form');
+    }
+});

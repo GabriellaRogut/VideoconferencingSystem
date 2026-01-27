@@ -175,7 +175,7 @@
 
     <footer>
         © 2025 SignConnect. Всички права запазени.
-        <a href="#" class="admin-entry" id="openAdminModal">System</a>
+        <a href="admin-panel/admin.php" class="admin-entry" id="openAdminModal">System</a>
     </footer>
 
 
@@ -237,35 +237,6 @@
     </div>
 
 
-    <!-- admin modal -->
-     <div class="modal-overlay <?php if (isset( $_SESSION['errors_admin']) ) echo " active" ?>" id="adminModal">
-        <div class="modal">
-            <span class="close" id="closeAdminModal">&times;</span>
-            <h3 class="admin-title">Оторизиран достъп</h3>
-            <p style="color: var(--color-muted); margin-bottom:1rem;">
-                Само администратори могат да влязат в системния панел.
-            </p>
-
-            <form method="POST" action="admin-panel/admin-login.php" class="modal-form <?php if (isset( $_SESSION['errors_admin']) ) echo " active-form" ?>" id="modalForm">
-                <input type="email" name="admin_email" placeholder="Имейл" required>
-                <input type="password" name="admin_password" placeholder="Парола" required>
-                <button type="submit" name="admin_login">Вход в системата</button>
-
-                <?php
-                    if (isset( $_SESSION['errors_admin'] ) ) {
-
-                        foreach( $_SESSION['errors_admin'] as $error ) {
-                            echo "<div class='error'>". $error . "</div>";
-
-                            unset( $_SESSION['errors_admin'] );
-                        }
-                    }
-                ?>
-            </form>
-        </div>
-    </div>
-
-
     <!-- MODALS -->
     <script>
         // Tabs & toggle logic
@@ -305,34 +276,6 @@
         // Switch login <-> signup
         switchToLogin.addEventListener('click',()=> loginTab.click());
         switchToSignup.addEventListener('click',()=> signupTab.click());
-    </script>
-
-
-    <!-- admin modal -->
-    <script>
-    const openAdminBtn = document.getElementById("openAdminModal");
-    const adminModal = document.getElementById("adminModal");
-    const closeAdminModal = document.getElementById("closeAdminModal");
-    const modalForm = document.getElementById("modalForm");
-
-    openAdminBtn.addEventListener("click", (e) => {
-        // e.preventDefault();
-        adminModal.classList.add("active");
-        modalForm.classList.add('active-form');
-    });
-
-    closeAdminModal.addEventListener("click", () => {
-        adminModal.classList.remove("active");
-        modalForm.classList.remove('active-form');
-    });
-
-    // Close on background click
-    adminModal.addEventListener("click", (e) => {
-        if (e.target === adminModal) {
-            adminModal.classList.remove("active");
-            modalForm.classList.remove('active-form');
-        }
-    });
     </script>
 
 

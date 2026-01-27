@@ -391,7 +391,9 @@
   display: flex;
   flex-direction: column;
   padding: 14px;
+  position: relative;
 }
+
 
 .name {
   font-weight: 600;
@@ -413,6 +415,31 @@
   background: var(--msg-local-user);
   margin-left: auto;
 }
+
+.chat-system-msg {
+  display: block;
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 20px);
+  background: var(--header-txt-bgr-call);
+  padding: 18px 7px;
+  border-radius: 9px;
+  text-align: center;
+  color: var(--meeting-header-card-txt);
+}
+
+.chat-system-msg-violated {
+  background: #fdecea !important;
+  color: #b71c1c !important;
+}
+
+.chat-system-msg-violated a {
+  text-decoration: underline;
+  font-weight: 600;
+}
+
 
 .input-wrapper {
   display: flex;

@@ -53,3 +53,5 @@
     header("Location: ../../meetings.php");
     exit;
 ?>
+
+<!-- delete chat too ? -->

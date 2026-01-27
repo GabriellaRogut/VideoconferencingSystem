@@ -277,69 +277,21 @@ body {
   color: var(--color-primary);
 }
 
-/* MODALS */
-.modal-overlay {
-  position: fixed; 
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%;
-  background: #00000073;
-  backdrop-filter: blur(8px);
-  display: flex; 
-  justify-content: center; 
-  align-items: center;
-  opacity: 0; 
-  pointer-events: none; 
-  inset: 0;
-  transition: 0.3s ease;
-  z-index: 9999;
+
+
+.toggle-text { 
+  font-size: 0.9rem; 
+  color: var(--color-muted); 
+  margin-top: 0.8rem; 
 }
 
-.modal-overlay.active {
-  opacity: 1; 
-  pointer-events: auto;
-}
-
-.modal {
-  background: var(--color-white); 
-  padding: 1.5rem;
-  border-radius: 1rem; 
-  width: 90%; 
-  max-width: 400px;
-  text-align: center; 
-  position: relative; 
-  transform: scale(1);
-  box-sizing: border-box;
-}
-
-.admin-title {
-  font-size: 22px !important;
+.toggle-link { 
+  color: var(--color-primary); 
+  cursor: pointer; 
+  text-decoration: underline; 
 }
 
 @media (max-width: 480px) {
-  .modal {
-    width: 95%;
-    padding: 1rem;
-  }
-
-  .modal h3 {
-    font-size: 1.25rem;
-  }
-
-  .modal-tabs button {
-    font-size: 0.9rem;
-    padding: 0.6rem 0;
-  }
-
-  .toggle-text {
-    font-size: 0.85rem;
-  }
-
-  .close {
-    right: 15px;
-    top: 10px;
-  }
   .join-section {
     padding: 3rem 1rem;
   }
@@ -355,107 +307,6 @@ body {
   }
 }
 
-
-.modal-overlay.active .modal {
-  transform: scale(1);
-}
-
-.modal h3{
-  font-family: "Montserrat",sans-serif;
-  margin-bottom: 1rem; 
-  color: var(--color-primary);
-}
-
-.modal input {
-  color: var(--input-color-txt) !important;
-  background-color: var(--color-bg);
-  width: 90%; 
-  padding: 0.8rem; 
-  margin-bottom: 1rem; 
-  border: 1px solid #ccc; 
-  border-radius: 0.5rem; 
-  font-size: 1rem; 
-  outline: none; 
-  transition: border-color 0.3s;
-}
-
-.modal input:focus { 
-  border-color: var(--color-primary); 
-}
-
-.modal button {
-  width: 90%; 
-  padding: 0.8rem; 
-  border: none; 
-  border-radius: 999px; 
-  background: var(--color-primary); 
-  color: var(--color-white); 
-  font-weight: 600; 
-  cursor: pointer; 
-  font-size: 1rem; 
-  transition: all 0.3s;
-}
-
-.modal button:hover { 
-  background: var(--color-primary-light); 
-}
-
-.close {
-  cursor: pointer;
-  position: absolute;
-  right: 20px;
-  top: 10px;
-}
-
-/* Tabs & toggle text */
-.modal-tabs { 
-  display: flex; 
-  justify-content: center; 
-  margin-bottom: 1rem;
-}
-
-.modal-tabs button {
-  flex: 1; 
-  padding: 0.8rem 0; 
-  border: none; 
-  cursor: pointer; 
-  font-weight: 600;
-  background: transparent; 
-  color: var(--color-muted); 
-  font-family: "Montserrat", sans-serif;
-  transition: all 0.3s;
-}
-
-.modal-tabs button.active-tab { 
-  color: var(--color-primary); 
-  border-bottom: 2px solid var(--color-primary); 
-}
-
-.modal-tabs button:hover{
-  color: var(--color-white);
-}
-
-.modal-form { 
-  display: none; 
-  flex-direction: column; 
-  align-items: center; 
-}
-
-.modal-form.active-form { 
-  display: flex; 
-}
-
-.toggle-text { 
-  font-size: 0.9rem; 
-  color: var(--color-muted); 
-  margin-top: 0.8rem; 
-}
-
-.toggle-link { 
-  color: var(--color-primary); 
-  cursor: pointer; 
-  text-decoration: underline; 
-}
 
 @media (max-width:768px) {
   .hero h1{
