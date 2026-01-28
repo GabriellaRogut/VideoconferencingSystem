@@ -23,8 +23,8 @@
 
     // Insert meeting
     $stmt = $connection->prepare("
-        INSERT INTO meetings (code, host_id, start_time, status)
-        VALUES (?, ?, NOW(), 'waiting')
+        INSERT INTO meetings (code, host_id, start_time, status, chat_enabled)
+        VALUES (?, ?, NOW(), 'waiting', 1)
     ");
     $stmt->execute([$code, $userID]);
 

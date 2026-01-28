@@ -33,7 +33,8 @@
         die("Само организаторът на срещата има право да я приключи.");
     }
 
-    // Update meeting status and end_time
+    
+    // UPDATE MEETING STATUS AND END TIME
     $stmt = $connection->prepare("
         UPDATE meetings 
         SET status = 'ended', end_time = NOW() 
@@ -41,17 +42,29 @@
     ");
     $stmt->execute([$meeting['id']]);
 
-    // INCREMENT HOST STATS
+
+    // INCREMENT MEETING COUNT FOR ALL PARTICIPANTS
     $stmt = $connection->prepare("
-        UPDATE users 
+        UPDATE users
         SET total_meetings = total_meetings + 1
-        WHERE id = ?
+        WHERE id IN (
+            SELECT user_id
+            FROM participants
+            WHERE meeting_id = ?
+        )
     ");
-    $stmt->execute([$userID]);
+    $stmt->execute([$meeting['id']]);
+
+
+    // DELETE ALL MESSAGES FROM THE MEETING
+    $stmt = $connection->prepare("
+        DELETE FROM chat_messages
+        WHERE meeting_id = ?
+    ");
+    $stmt->execute([$meeting['id']]);
+
 
 
     header("Location: ../../meetings.php");
     exit;
 ?>
-
-<!-- delete chat too ? -->

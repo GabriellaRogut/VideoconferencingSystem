@@ -32,7 +32,7 @@
 
   // Fetch meeting info
   $stmt = $connection->prepare("
-      SELECT m.id, m.code, m.start_time, m.duration_minutes, u.username AS host_name
+      SELECT m.id, m.code, m.start_time, m.duration_minutes, m.chat_enabled, u.username AS host_name
       FROM meetings m
       JOIN users u ON m.host_id = u.id
       WHERE m.code = ?
@@ -96,13 +96,13 @@
       <!-- Video Grid -->
       <section class="video-area">
         <div class="video-grid">
-          <!-- local once -->
+          <!-- local -->
           <div class="video-card" id="localVideoCard">
             <video id="localVideo" autoplay muted playsinline></video>
             <div class="username-bubble"><i class="fa-solid fa-user"></i> Вие</div>
           </div>
 
-          <!-- remote others -->
+          <!-- remote -->
           <?php foreach ($participants as $p){ ?>
             <?php if ($p['username'] === $local_username) continue; ?>
             <div class="video-card">
@@ -169,9 +169,9 @@
             <div class="dropdown-menu" id="chatMenu">
               <div class="menu-item" id="clearChat">Изтрий за мен</div>
               <div class="menu-item" id="stopChat">Спиране</div>
-              <?php if ($p['role'] === 'host') { ?>
+              <?php if ($p['username'] == $local_username && $p['role'] == 'host') { ?>
                 <div class="menu-item" id="deleteChat">Изтрий за всички</div>
-               <?php } ?>
+              <?php } ?>
             </div>
           </div>
         </div>
@@ -202,14 +202,14 @@
       const msgInput = document.getElementById("msgInput");
       const sendBtn = document.getElementById("sendBtn");
 
-      const systemMessage = document.querySelector(".chat-system-msg")
 
       if (!sendBtn || !msgInput || !msgContainer) return;
 
       let lastId = 0;
       let isFetching = false;
 
-      // security
+
+      // SECURITY
       function escapeHtml(str) {
         return String(str)
           .replaceAll("&", "&amp;")
@@ -221,7 +221,19 @@
 
 
 
-      // system messages
+      // VIOLATION CHECK
+      const bannedWords = ["лошадума", "многолошадума"];
+
+      function containsBannedWord(text) {
+        const lowerText = text.toLowerCase();
+        return bannedWords.some(word => lowerText.includes(word.toLowerCase()));
+      }
+
+
+
+      // SYSTEM MESSAGES
+      const systemMessage = document.querySelector(".chat-system-msg")
+
       function showSystemMessage(html, isViolated = false) {
         systemMessage.style.display = "block";
         systemMessage.innerHTML = html;
@@ -238,13 +250,14 @@
 
 
 
+      // SCROLL TO BOTTOM
       function scrollToBottom() {
         msgContainer.scrollTop = msgContainer.scrollHeight;
       }
 
 
 
-      // displaying message
+      // DISPLAY MESSAGE
       function renderMessage(m) {
         const wrap = document.createElement("div");
         wrap.className = "msg" + (Number(m.user_id) === Number(localUserId) ? " me" : "");
@@ -265,7 +278,8 @@
       }
 
 
-      // fetch messages
+
+      // FETCH MESSAGES
       async function fetchMessages() {
         if (isFetching) return;
         isFetching = true;
@@ -293,7 +307,8 @@
       }
 
 
-      // send messages
+
+      // SEND MESSAGES
       async function sendMessage() {
         const text = msgInput.value.trim();
         if (!text) return;
@@ -413,16 +428,6 @@
         }
       });
 
-
-
-      // VIOLATION CHECK
-      // banned words list
-      const bannedWords = ["лошадума", "многолошадума"];
-
-      function containsBannedWord(text) {
-        const lowerText = text.toLowerCase();
-        return bannedWords.some(word => lowerText.includes(word.toLowerCase()));
-      }
 
 
       fetchMessages();

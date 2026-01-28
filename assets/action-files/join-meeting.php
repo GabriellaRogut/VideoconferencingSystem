@@ -4,12 +4,12 @@
     $errors_meeting = [];
 
     $userID = $_SESSION['user_id'];
-    $code = $_GET['code'] ?? null;
+    $code = strtoupper($_GET['code'] ?? null);
 
     $stmt = $connection->prepare("
         SELECT id, status
         FROM meetings 
-        WHERE code = ?
+        WHERE UPPER(code) = ?
     ");
     $stmt->execute([$code]);
     $meeting = $stmt->fetch();

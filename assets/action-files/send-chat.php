@@ -27,24 +27,29 @@ try {
     }
 
     // Get meeting ID
-    $stmt = $connection->prepare("SELECT id FROM meetings WHERE code = ?");
+    $stmt = $connection->prepare("SELECT id, chat_enabled FROM meetings WHERE code = ?");
     $stmt->execute([$meeting_code]);
-    $meeting = $stmt->fetch(PDO::FETCH_ASSOC);
+    $meeting = $stmt->fetch();
 
-    if (!$meeting) {
+    if (!$meeting['id']) {
         http_response_code(404);
         echo json_encode(['status' => 'error', 'message' => 'Meeting not found'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     // Insert message
-    $stmt = $connection->prepare("
-        INSERT INTO chat_messages (meeting_id, user_id, name, message)
-        VALUES (?, ?, ?, ?)
-    ");
-    $stmt->execute([(int)$meeting['id'], $userID, $name, $message]);
+    if ($meeting['chat_enabled'] == 1) {
+        $stmt = $connection->prepare("
+            INSERT INTO chat_messages (meeting_id, user_id, name, message)
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->execute([(int)$meeting['id'], $userID, $name, $message]);
 
-    echo json_encode(['status' => 'success'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['status' => 'success'], JSON_UNESCAPED_UNICODE);
+    } else {
+        echo json_encode(["status" => "stopped"], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
 
 } catch (Throwable $e) {
     http_response_code(500);
