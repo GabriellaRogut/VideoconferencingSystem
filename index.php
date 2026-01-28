@@ -21,6 +21,25 @@
 ?>
 
 
+<?php
+// Fetch 2 newest feedbacks
+    try {
+        $stmt = $connection->prepare("
+            SELECT username, message, created_at 
+            FROM feedbacks 
+            ORDER BY created_at DESC 
+            LIMIT 2
+        ");
+        $stmt->execute();
+        $latest_feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC); // associative array
+    } catch(PDOException $e) {
+        $latest_feedbacks = []; // fallback if query fails
+    }
+?>
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="bg">
@@ -140,16 +159,16 @@
     <!-- TESTIMONIALS SECTION -->
     <section class="testimonials" id="testimonials">
         <h2>Какво казват потребителите ни</h2>
-        <div class="testimonial-card">
-            <p>"SignConnect напълно промени начина, по който провеждам срещите си. Безпроблемно и точно!"</p>
-            <h4>- Симеон В.</h4>
-        </div>
 
-        <div class="testimonial-card">
-            <p>"Това е стъпка към свят без езикови бариери, където всички могат да участват в комуникацията свободно."</p>
-            <h4>- Валентина К.</h4>
-        </div>
+            <?php foreach ($latest_feedbacks as $fb) { ?>
+                <div class="testimonial-card">
+                    <p>"<?= htmlspecialchars($fb['message']) ?>"</p>
+                    <h4>- <?= !empty($fb['username']) ? htmlspecialchars($fb['username']) : "Анонимен" ?></h4>
+                </div>
+            <?php } ?>
+
     </section>
+
 
     <!-- SHARE THOUGHTS SECTION -->
     <section class="share-opinion">
@@ -159,9 +178,9 @@
                 <p>Кажете ни как можем да направим SignConnect още по-добър.</p>
             </div>
 
-            <form class="opinion-form" method="POST" action="assets/action-files/send-opinion.php">
-                <input type="text" placeholder="Вашето име (незадължително)">
-                <textarea placeholder="Вашето съобщение..." required></textarea>
+            <form class="opinion-form" method="POST" action="assets/action-files/send-feedback.php">
+                <input type="text" name="username" placeholder="Вашето име (незадължително)">
+                <textarea name="message" placeholder="Вашето съобщение..." required></textarea>
                 <button type="submit" name="send-opinion" value="send-opinion">Изпрати мнение</button>
             </form>
         </div>

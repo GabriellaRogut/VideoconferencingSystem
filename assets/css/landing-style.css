@@ -124,15 +124,23 @@ body {
   box-shadow: 0 4px 15px var(--shadow-light); 
   margin: 1rem; 
   max-width: 400px;
+  min-width: 100px;
   display: inline-block; 
   vertical-align: top;
+  height: 220px;
 }
 
 .testimonial-card p {
   font-style: italic; 
   color: var(--color-text); 
   margin-bottom: 1rem;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
+
+
 
 .testimonial-card h4 {
   font-weight: 600; 
