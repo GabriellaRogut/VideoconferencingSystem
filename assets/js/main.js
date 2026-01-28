@@ -39,6 +39,8 @@ const adminModal = document.getElementById("adminModal");
 const closeAdminModal = document.getElementById("closeAdminModal");
 const modalForm = document.getElementById("modalForm");
 
+if ( openAdminBtn && closeAdminModal && adminModal){
+
 openAdminBtn.addEventListener("click", (e) => {
     e.preventDefault();
     adminModal.classList.add("active");
@@ -57,3 +59,4 @@ adminModal.addEventListener("click", (e) => {
         modalForm.classList.remove('active-form');
     }
 });
+}

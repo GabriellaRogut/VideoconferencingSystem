@@ -168,9 +168,9 @@
             <i class="fa-solid fa-ellipsis-vertical chat-options"></i>
             <div class="dropdown-menu" id="chatMenu">
               <div class="menu-item" id="clearChat">Изтрий за мен</div>
-              <div class="menu-item" id="stopChat">Спиране</div>
               <?php if ($p['username'] == $local_username && $p['role'] == 'host') { ?>
                 <div class="menu-item" id="deleteChat">Изтрий за всички</div>
+                <div class="menu-item" id="stopChat">Спиране</div>
               <?php } ?>
             </div>
           </div>
@@ -279,8 +279,9 @@
 
 
 
-      // FETCH MESSAGES
+       // FETCH MESSAGES
       async function fetchMessages() {
+
         if (isFetching) return;
         isFetching = true;
 
@@ -290,10 +291,18 @@
           if (!res.ok) return;
 
           const data = await res.json();
-          if (!Array.isArray(data)) return;
 
+          chatStopped = ( data.chat_enabled == "0" ? true : false ) ;
+
+          if ( chatStopped != currentChatStopped  ) {
+            currentChatStopped = chatStopped;
+            toggleChat();
+          } 
+          if (!Array.isArray(data.messages)) return;
+
+          
           let gotNew = false;
-          for (const m of data) {
+          for (const m of data.messages) {
             renderMessage(m);
             if (m.id && Number(m.id) > lastId) lastId = Number(m.id);
             gotNew = true;
@@ -389,17 +398,22 @@
 
       // STOP CHAT
       let chatStopped = false;
+      var currentChatStopped = chatStopped; // for chat stopped message not to flicker
+
       const stopChatBtn = document.getElementById("stopChat");
 
-      // update button label
-      function updateStopChatButton() {
+      // enable/disable chat
+      function enableDisableChat() {
+        chatStopped = !chatStopped;
+
         stopChatBtn.textContent = chatStopped ? "Пускане" : "Спиране";
+        fetch('assets/action-files/stop-chat.php?id=<?= $meeting['id'] ?>');
       }
+
+
 
       // chat on/off
       function toggleChat() {
-        chatStopped = !chatStopped;
-
         msgInput.disabled = chatStopped;
         sendBtn.disabled = chatStopped;
         msgInput.placeholder = chatStopped ? "Чатът е спрян от хоста." : "Съобщение...";
@@ -408,18 +422,15 @@
           showSystemMessage(`<i class="fa-solid fa-ban"></i> Чатът беше спрян от хоста.`);
         } else {
           systemMessage.style.display = "none";
-        }
-        updateStopChatButton();
+        } 
       }
-      stopChatBtn.addEventListener("click", toggleChat);
-      updateStopChatButton();
+
+      if ( stopChatBtn ) {
+        stopChatBtn.addEventListener("click", enableDisableChat);
+      }
 
 
-      // Sending messages automatically respects disabled state
-      sendBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (!msgInput.disabled && msgInput.value.trim()) sendMessage();
-      });
+
 
       msgInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter" && !msgInput.disabled) {
@@ -431,7 +442,7 @@
 
 
       fetchMessages();
-      setInterval(fetchMessages, 1000);
+      setInterval(fetchMessages, 1500);
     });
   </script>
 

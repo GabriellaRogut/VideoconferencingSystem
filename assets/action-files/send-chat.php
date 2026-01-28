@@ -46,6 +46,7 @@ try {
         $stmt->execute([(int)$meeting['id'], $userID, $name, $message]);
 
         echo json_encode(['status' => 'success'], JSON_UNESCAPED_UNICODE);
+        
     } else {
         echo json_encode(["status" => "stopped"], JSON_UNESCAPED_UNICODE);
         exit;

@@ -41,10 +41,30 @@ try {
         ORDER BY cm.id ASC
     ");
     $stmt->execute([(int)$meeting['id'], $last_id]);
-
     $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo json_encode($messages, JSON_UNESCAPED_UNICODE);
+
+
+    // Fetch en/disab
+    $stmt = $connection->prepare("
+        SELECT chat_enabled
+        FROM meetings
+        WHERE id = ?
+    ");
+    $stmt->execute([(int)$meeting['id']]);
+    $enabled = $stmt->fetchColumn();
+
+
+    // echo json_encode([
+    //     "chat_enabled" => $enabled,
+    //     "messages" => $messages
+    // ], JSON_UNESCAPED_UNICODE);
+
+   echo json_encode( [
+        "chat_enabled" => $enabled,
+        "messages" => $messages
+    ], JSON_UNESCAPED_UNICODE);
+
 
 } catch (Throwable $e) {
     http_response_code(500);

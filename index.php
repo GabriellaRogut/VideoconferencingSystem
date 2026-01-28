@@ -25,8 +25,9 @@
 // Fetch 2 newest feedbacks
     try {
         $stmt = $connection->prepare("
-            SELECT username, message, created_at 
+            SELECT username, message, created_at, status
             FROM feedbacks 
+            WHERE status = 'approved'
             ORDER BY created_at DESC 
             LIMIT 2
         ");

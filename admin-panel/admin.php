@@ -20,6 +20,20 @@
 ?>
 
 
+<?php
+    // Fetch pending feedbacks
+    $feedbackStmt = $connection->prepare("
+        SELECT id, username, message, created_at
+        FROM feedbacks
+        WHERE status = 'pending'
+        ORDER BY created_at DESC
+    ");
+    $feedbackStmt->execute();
+    $feedbacks = $feedbackStmt->fetchAll();
+?>
+
+
+
 <!-- WELCOME ADMIN MESSAGE -->
 <?php if (isset($_SESSION['admin_welcome'])){ ?>
     <div id="adminWelcome" class="admin-welcome">
@@ -125,6 +139,59 @@
             </div>
         </div>
     </section>
+
+
+    <section class="admin-feedbacks">
+        <div class="feature-card">
+            <h3><i class="fa-solid fa-comment-dots"></i> Мнения за одобрение</h3>
+
+            <div class="table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Потребител</th>
+                            <th>Съобщение</th>
+                            <th>Дата</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($feedbacks){ ?>
+                            <?php foreach ($feedbacks as $fb){ ?>
+                                <tr>
+                                    <td><?= $fb['id'] ?></td>
+                                    <td><?= htmlspecialchars($fb['username'] ?? 'Анонимен') ?></td>
+                                    <td><?= nl2br(htmlspecialchars($fb['message'])) ?></td>
+                                    <td><?= date('d.m.Y H:i', strtotime($fb['created_at'])) ?></td>
+                                    <td class="actions-td">
+                                        <form action="feedback-action.php" method="post" style="display:inline;">
+                                            <input type="hidden" name="id" value="<?= $fb['id'] ?>">
+                                            <button name="approve" class="action-btn upd-btn">
+                                                <i class="fa-solid fa-check"></i> Одобри
+                                            </button>
+                                        </form>
+
+                                        <form action="feedback-action.php" method="post" style="display:inline;">
+                                            <input type="hidden" name="id" value="<?= $fb['id'] ?>">
+                                            <button name="reject" class="action-btn del-btn">
+                                                <i class="fa-solid fa-xmark"></i> Откажи
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <tr>
+                                <td colspan="5" class="empty">Няма чакащи мнения</td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
 
 
     
